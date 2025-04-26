@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@utility container {
+  @apply mx-auto px-6 py-4;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -25,10 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {" "}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} mx-auto min-h-screen w-full scroll-smooth antialiased`}
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}{" "}
+          {children}
         </ThemeProvider>
       </body>
     </html>
