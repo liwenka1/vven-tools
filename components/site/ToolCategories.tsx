@@ -8,7 +8,8 @@ const categories = [
     description: "处理和转换文本内容。",
     tools: [
       { name: "字数统计", href: "/tools/text/word-count" },
-      { name: "JSON 格式化", href: "/tools/text/json-formatter" }
+      { name: "JSON 格式化", href: "/tools/text/json-formatter" },
+      { name: "XML 转 JSON", href: "/tools/text/xml-to-json" }
     ]
   },
   {
