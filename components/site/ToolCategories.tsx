@@ -9,7 +9,8 @@ const categories = [
     tools: [
       { name: "字数统计", href: "/tools/text/word-count" },
       { name: "JSON 格式化", href: "/tools/text/json-formatter" },
-      { name: "XML 转 JSON", href: "/tools/text/xml-to-json" }
+      { name: "XML 转 JSON", href: "/tools/text/xml-to-json" },
+      { name: "HTML 转 MarkDown", href: "/tools/text/html-to-markdown" }
     ]
   },
   {
