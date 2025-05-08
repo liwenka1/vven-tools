@@ -28,7 +28,8 @@ const categories = [
     tools: [
       { name: "时间戳转换", href: "/tools/dev/timestamp" },
       { name: "URL 编码/解码", href: "/tools/dev/url-codec" },
-      { name: "URL 格式化", href: "/tools/dev/url-formatter" }
+      { name: "URL 格式化", href: "/tools/dev/url-formatter" },
+      { name: "正则大全", href: "/tools/dev/regex-collection" }
     ]
   }
   // Add more categories as needed
