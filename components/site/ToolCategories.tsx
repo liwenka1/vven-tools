@@ -27,7 +27,8 @@ const categories = [
     description: "辅助开发的实用工具。",
     tools: [
       { name: "时间戳转换", href: "/tools/dev/timestamp" },
-      { name: "URL 编码/解码", href: "/tools/dev/url-codec" }
+      { name: "URL 编码/解码", href: "/tools/dev/url-codec" },
+      { name: "URL 格式化", href: "/tools/dev/url-formatter" }
     ]
   }
   // Add more categories as needed
