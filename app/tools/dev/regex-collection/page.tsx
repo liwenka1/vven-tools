@@ -21,39 +21,37 @@ type MatchResultStatus = "success" | "fail_text_mismatch" | "fail_regex_invalid"
 const initialRegexData: RegexEntry[] = [
   {
     name: "邮箱地址",
-    regex:
-      '/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/',
+    regex: String.raw`^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`,
     description: "匹配标准邮箱地址格式。",
     tags: ["email", "validation"]
   },
   {
     name: "URL链接",
-    regex: "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/",
+    regex: String.raw`/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/`,
     description: "匹配HTTP和HTTPS URL。",
     tags: ["url", "web", "validation"]
   },
   {
     name: "手机号码 (中国大陆)",
-    regex:
-      "/^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/",
+    regex: String.raw`/^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/`,
     description: "匹配中国大陆常见的手机号码格式。",
     tags: ["phone", "mobile", "china"]
   },
   {
     name: "身份证号码 (中国大陆, 18位)",
-    regex: "/^[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/",
+    regex: String.raw`/^[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/`,
     description: "匹配中国大陆18位身份证号码。",
     tags: ["id", "identity", "china"]
   },
   {
     name: "IPv4 地址",
-    regex: "/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/",
+    regex: String.raw`/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/`,
     description: "匹配IPv4地址格式。",
     tags: ["ip", "network", "ipv4"]
   },
   {
     name: "日期 (YYYY-MM-DD)",
-    regex: "/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/",
+    regex: String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/`,
     description: "匹配 YYYY-MM-DD 格式的日期。",
     tags: ["date", "time"]
   }
@@ -92,21 +90,10 @@ export default function RegexCollectionPage() {
       });
   };
 
-  // Helper function to parse regex string (e.g., "/pattern/flags")
   const parseRegex = (regexString: string): RegExp | null => {
     try {
-      // Remove surrounding slashes and extract flags
-      const regexWithoutSlashes = regexString.replace(/^\/(.*)\/$/, "$1");
-      const flagsMatch = regexString.match(/\/([gimuy]*)$/);
-      const flags = flagsMatch ? flagsMatch[1] : "";
-
-      console.log("Parsing regex:", {
-        original: regexString,
-        cleaned: regexWithoutSlashes,
-        flags: flags
-      });
-
-      return new RegExp(regexWithoutSlashes, flags);
+      // 直接使用字符串创建正则（已去掉多余的符号）
+      return new RegExp(regexString);
     } catch (e) {
       console.error("Error creating RegExp:", e);
       return null;
@@ -201,10 +188,19 @@ export default function RegexCollectionPage() {
                         </div>
 
                         {/* Regex display and copy button */}
-                        <div className="nya-copy-container">
+                        <div className="relative">
                           {" "}
-                          {/* Removed mt-2 to adjust spacing */}
-                          <div className="nya-copy-header-container mb-1 flex justify-end">
+                          {/* Parent container for positioning */}
+                          <div className="rounded-md border bg-gray-100 p-3 pr-10 dark:bg-gray-800">
+                            {" "}
+                            {/* Added pr-10 for padding for the button */}
+                            <pre className="overflow-x-auto break-words">
+                              <code className="font-mono text-sm whitespace-pre-wrap">{item.regex}</code>
+                            </pre>
+                          </div>
+                          <div className="absolute top-1 right-1">
+                            {" "}
+                            {/* Positioned copy button */}
                             <Tooltip delayDuration={300}>
                               <TooltipTrigger asChild>
                                 <Button
@@ -221,11 +217,6 @@ export default function RegexCollectionPage() {
                                 <p>复制</p>
                               </TooltipContent>
                             </Tooltip>
-                          </div>
-                          <div className="rounded-md border bg-gray-100 p-3 dark:bg-gray-800">
-                            <pre className="overflow-x-auto">
-                              <code className="font-mono text-sm whitespace-nowrap">{item.regex}</code>
-                            </pre>
                           </div>
                         </div>
                       </CardContent>
