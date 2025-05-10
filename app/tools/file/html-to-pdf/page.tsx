@@ -53,7 +53,7 @@ export default function HtmlToPdfPage() {
         }
 
         // 预处理 HTML 内容，替换 oklch() 颜色函数
-        const processedHtmlContent = htmlContent.replace(/oklch\s*\([^)]*\)/gi, 'transparent');
+        const processedHtmlContent = htmlContent.replace(/oklch\s*\([^)]*\)/gi, "transparent");
 
         // 创建一个临时的 div 来渲染 HTML 内容，以便 html2canvas 捕获
         const tempDiv = document.createElement("div");
@@ -66,28 +66,28 @@ export default function HtmlToPdfPage() {
         // 进一步处理DOM中的oklch
         const oklchRegex = /oklch\s*\([^)]*\)/gi;
         const elements = tempDiv.querySelectorAll("*");
-        elements.forEach(element => {
+        elements.forEach((element) => {
           if (element instanceof HTMLElement) {
             // 处理内联样式
             for (const propertyName of Array.from(element.style)) {
               const propertyValue = element.style.getPropertyValue(propertyName);
               if (oklchRegex.test(propertyValue)) {
-                element.style.setProperty(propertyName, propertyValue.replace(oklchRegex, 'transparent'));
+                element.style.setProperty(propertyName, propertyValue.replace(oklchRegex, "transparent"));
               }
             }
             // 检查是否有 style 属性本身包含 oklch
-            const styleAttribute = element.getAttribute('style');
+            const styleAttribute = element.getAttribute("style");
             if (styleAttribute && oklchRegex.test(styleAttribute)) {
-                element.setAttribute('style', styleAttribute.replace(oklchRegex, 'transparent'));
+              element.setAttribute("style", styleAttribute.replace(oklchRegex, "transparent"));
             }
           }
         });
 
         // 处理 <style> 标签中的 oklch
         const styleTags = tempDiv.querySelectorAll("style");
-        styleTags.forEach(styleTag => {
+        styleTags.forEach((styleTag) => {
           if (styleTag.innerHTML && oklchRegex.test(styleTag.innerHTML)) {
-            styleTag.innerHTML = styleTag.innerHTML.replace(oklchRegex, 'transparent');
+            styleTag.innerHTML = styleTag.innerHTML.replace(oklchRegex, "transparent");
           }
         });
 

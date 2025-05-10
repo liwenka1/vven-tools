@@ -35,9 +35,7 @@ const categories = [
   {
     title: "文件工具",
     description: "处理和转换各类文件。",
-    tools: [
-      { name: "HTML 转 PDF", href: "/tools/file/html-to-pdf" }
-    ]
+    tools: [{ name: "HTML 转 PDF", href: "/tools/file/html-to-pdf" }]
   }
   // Add more categories as needed
 ];
