@@ -31,6 +31,13 @@ const categories = [
       { name: "URL 格式化", href: "/tools/dev/url-formatter" },
       { name: "正则大全", href: "/tools/dev/regex-collection" }
     ]
+  },
+  {
+    title: "文件工具",
+    description: "处理和转换各类文件。",
+    tools: [
+      { name: "HTML 转 PDF", href: "/tools/file/html-to-pdf" }
+    ]
   }
   // Add more categories as needed
 ];
