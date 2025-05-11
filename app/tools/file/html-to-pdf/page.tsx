@@ -55,44 +55,67 @@ export default function HtmlToPdfPage() {
         // 预处理 HTML 内容，替换 oklch() 颜色函数
         const processedHtmlContent = htmlContent.replace(/oklch\s*\([^)]*\)/gi, "transparent");
 
-        // 创建一个临时的 div 来渲染 HTML 内容，以便 html2canvas 捕获
-        const tempDiv = document.createElement("div");
-        tempDiv.style.position = "absolute";
-        tempDiv.style.left = "-9999px"; // 移出屏幕外
-        tempDiv.style.width = "210mm"; // A4 宽度
-        tempDiv.innerHTML = processedHtmlContent;
-        document.body.appendChild(tempDiv);
-
-        // 进一步处理DOM中的oklch
-        const oklchRegex = /oklch\s*\([^)]*\)/gi;
-        const elements = tempDiv.querySelectorAll("*");
-        elements.forEach((element) => {
-          if (element instanceof HTMLElement) {
-            // 处理内联样式
-            for (const propertyName of Array.from(element.style)) {
-              const propertyValue = element.style.getPropertyValue(propertyName);
-              if (oklchRegex.test(propertyValue)) {
-                element.style.setProperty(propertyName, propertyValue.replace(oklchRegex, "transparent"));
-              }
-            }
-            // 检查是否有 style 属性本身包含 oklch
-            const styleAttribute = element.getAttribute("style");
-            if (styleAttribute && oklchRegex.test(styleAttribute)) {
-              element.setAttribute("style", styleAttribute.replace(oklchRegex, "transparent"));
-            }
-          }
-        });
-
-        // 处理 <style> 标签中的 oklch
-        const styleTags = tempDiv.querySelectorAll("style");
-        styleTags.forEach((styleTag) => {
-          if (styleTag.innerHTML && oklchRegex.test(styleTag.innerHTML)) {
-            styleTag.innerHTML = styleTag.innerHTML.replace(oklchRegex, "transparent");
-          }
-        });
+        // 创建一个临时的 iframe 来渲染 HTML 内容，以便 html2canvas 捕获
+        const iframe = document.createElement("iframe");
+        iframe.style.position = "absolute";
+        iframe.style.left = "-9999px"; // 移出屏幕外
+        iframe.style.width = "210mm"; // A4 宽度
+        iframe.style.height = "297mm"; // A4 高度，可根据内容调整
+        iframe.style.border = "none";
+        document.body.appendChild(iframe);
 
         try {
-          const canvas = await html2canvas(tempDiv, {
+          await new Promise<void>((resolve, reject) => {
+            if (!iframe.contentWindow) {
+              reject(new Error("Iframe contentWindow is null"));
+              return;
+            }
+            iframe.srcdoc = processedHtmlContent;
+            iframe.onload = () => {
+              try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                if (!iframeDoc) {
+                  reject(new Error("Iframe document is null"));
+                  return;
+                }
+
+                // 进一步处理 iframe DOM中的oklch
+                const oklchRegex = /oklch\s*\([^)]*\)/gi;
+                const elements = iframeDoc.querySelectorAll("*");
+                elements.forEach((element) => {
+                  if (element instanceof HTMLElement) {
+                    // 处理内联样式
+                    for (const propertyName of Array.from(element.style)) {
+                      const propertyValue = element.style.getPropertyValue(propertyName);
+                      if (oklchRegex.test(propertyValue)) {
+                        element.style.setProperty(propertyName, propertyValue.replace(oklchRegex, "transparent"));
+                      }
+                    }
+                    // 检查是否有 style 属性本身包含 oklch
+                    const styleAttribute = element.getAttribute("style");
+                    if (styleAttribute && oklchRegex.test(styleAttribute)) {
+                      element.setAttribute("style", styleAttribute.replace(oklchRegex, "transparent"));
+                    }
+                  }
+                });
+
+                // 处理 <style> 标签中的 oklch
+                const styleTags = iframeDoc.querySelectorAll("style");
+                styleTags.forEach((styleTag) => {
+                  if (styleTag.innerHTML && oklchRegex.test(styleTag.innerHTML)) {
+                    styleTag.innerHTML = styleTag.innerHTML.replace(oklchRegex, "transparent");
+                  }
+                });
+                console.log("iframe.contentDocument.body.outerHTML before html2canvas:", iframeDoc.body.outerHTML);
+                resolve();
+              } catch (e) {
+                reject(e);
+              }
+            };
+            iframe.onerror = reject;
+          });
+
+          const canvas = await html2canvas(iframe.contentDocument!.body, {
             scale: 2, // 提高分辨率
             useCORS: true, // 如果 HTML 包含跨域图片
             logging: false
@@ -123,7 +146,7 @@ export default function HtmlToPdfPage() {
           console.error("html2canvas error:", canvasError);
           // toast.error('将 HTML 转换为图像时出错。请检查控制台获取更多信息。');
         } finally {
-          document.body.removeChild(tempDiv); // 清理临时 div
+          document.body.removeChild(iframe); // 清理临时 iframe
         }
       };
 
