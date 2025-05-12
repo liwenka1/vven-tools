@@ -19,7 +19,8 @@ const categories = [
     description: "编辑和转换图像文件。",
     tools: [
       { name: "图片压缩", href: "/tools/image/compressor" },
-      { name: "格式转换", href: "/tools/image/converter" }
+      { name: "格式转换", href: "/tools/image/converter" },
+      { name: "中国传统色", href: "/tools/colors/china-colors" }
     ]
   },
   {
