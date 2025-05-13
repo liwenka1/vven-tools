@@ -11,7 +11,10 @@ const categories = [
       { name: "JSON 格式化", href: "/tools/text/json-formatter" },
       { name: "XML 转 JSON", href: "/tools/text/xml-to-json" },
       { name: "HTML 转 MarkDown", href: "/tools/text/html-to-markdown" },
-      { name: "Base64 编码/解码", href: "/tools/text/base64-encoder-decoder" }
+      { name: "Base64 编码/解码", href: "/tools/text/base64-encoder-decoder" },
+      { name: "中英文自动加空格", href: "/tools/text/text-autospace" },
+      { name: "数字转中文", href: "/tools/text/number-to-chinese" },
+      { name: "文本去重", href: "/tools/text/remove-duplicate" }
     ]
   },
   {
