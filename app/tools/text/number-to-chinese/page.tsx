@@ -1,0 +1,260 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { ClipboardCopy } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+export default function NumberToChinesePage() {
+  const [number, setNumber] = useState<string>("");
+  const [result, setResult] = useState<string>("");
+  const [type, setType] = useState<"normal" | "rmb">("normal");
+  const [errorMsg, setErrorMsg] = useState<string>("");
+
+  // Configuration for normal Chinese numbers
+  const cnNums = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+  const cnIntRadice = ["", "十", "百", "千"];
+  const cnIntUnits = ["", "万", "亿", "兆"];
+  
+  // Configuration for RMB format (formal characters)
+  const rmbNums = ["零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"];
+  const rmbIntRadice = ["", "拾", "佰", "仟"];
+  const rmbIntUnits = ["", "万", "亿", "兆"];
+  const cnDecUnits = ["角", "分", "毫", "厘"];
+  const cnInteger = "整";
+  const cnIntLast = "元";
+  const maxNum = 999999999999999; // Adjusted to avoid precision loss
+
+  // Convert integer part
+  const integerToChinese = (num: number, isMoney: boolean): string => {
+    let integerNum = Math.floor(Math.abs(num));
+    let result = "";
+    let unitPos = 0;
+    let strIns = "";
+    let zeroCount = 0;
+    
+    // Choose the appropriate character set based on format
+    const nums = isMoney ? rmbNums : cnNums;
+    const intRadice = isMoney ? rmbIntRadice : cnIntRadice;
+    const intUnits = isMoney ? rmbIntUnits : cnIntUnits;
+    
+    if (integerNum === 0) {
+      if (isMoney) return cnIntLast;
+      return nums[0];
+    }
+
+    while (integerNum > 0) {
+      const quotient = Math.floor(integerNum / 10);
+      const remainder = integerNum % 10;
+      const p = unitPos % 4;
+      const q = Math.floor(unitPos / 4);
+
+      if (remainder === 0) {
+        zeroCount++;
+      } else {
+        if (zeroCount > 0) {
+          strIns = nums[0] + strIns;
+          zeroCount = 0;
+        }
+        strIns = nums[remainder] + intRadice[p] + strIns;
+      }
+
+      // Add units
+      if (p === 0 && zeroCount < 4 && q > 0) {
+        strIns = intUnits[q] + strIns;
+      }
+
+      // Special case for "十"/"拾"
+      if (quotient < 1 && p === 1 && q === 0) {
+        if (!isMoney && strIns.startsWith("一十")) {
+          strIns = strIns.substring(1);
+        }
+      }
+
+      unitPos++;
+      integerNum = quotient;
+    }
+
+    if (isMoney) {
+      result = strIns + cnIntLast;
+    } else {
+      result = strIns;
+    }
+    
+    return result;
+  };
+
+  // Convert decimal part for money
+  const decimalToChinese = (num: number, isMoney: boolean): string => {
+    const decimalNum = Math.abs(num) - Math.floor(Math.abs(num));
+    let result = "";
+    
+    if (decimalNum === 0) {
+      return isMoney ? cnInteger : "";
+    }
+    
+    const roundedDecimal = Math.round(decimalNum * 10000) / 10000;
+    const decimalStr = roundedDecimal.toString().substring(2);
+    
+    // Choose number characters based on format
+    const nums = isMoney ? rmbNums : cnNums;
+    
+    for (let i = 0; i < decimalStr.length; i++) {
+      if (i >= cnDecUnits.length) break; // Only process up to available units
+      
+      const digit = parseInt(decimalStr[i], 10);
+      if (digit !== 0) {
+        result += nums[digit] + (isMoney ? cnDecUnits[i] : "");
+      } else if (result !== "" && isMoney) {
+        result += nums[digit];
+      }
+    }
+    
+    return result;
+  };
+
+  // Main conversion function
+  const convertToChinese = () => {
+    setErrorMsg("");
+    
+    if (!number.trim()) {
+      setErrorMsg("请输入一个数字");
+      setResult("");
+      return;
+    }
+    
+    const num = parseFloat(number.replace(/,/g, ""));
+    
+    if (isNaN(num)) {
+      setErrorMsg("请输入有效的数字");
+      setResult("");
+      return;
+    }
+    
+    if (num > maxNum) {
+      setErrorMsg(`数字不能超过 ${maxNum}`);
+      setResult("");
+      return;
+    }
+    
+    const sign = num < 0 ? "负" : "";
+    
+    if (type === "rmb") {
+      // RMB format - formal currency characters
+      const integerPart = integerToChinese(num, true);
+      const decimalPart = decimalToChinese(num, true);
+      setResult(sign + integerPart + decimalPart);
+    } else {
+      // Normal Chinese numbers
+      const integerPart = integerToChinese(num, false);
+      const decimalNum = Math.abs(num) - Math.floor(Math.abs(num));
+      
+      if (decimalNum === 0) {
+        setResult(sign + integerPart);
+      } else {
+        const decimalStr = decimalNum.toString().substring(2);
+        let decimalPart = "点";
+        
+        for (const digit of decimalStr) {
+          decimalPart += cnNums[parseInt(digit, 10)];
+        }
+        
+        setResult(sign + integerPart + decimalPart);
+      }
+    }
+  };
+
+  const handleClear = () => {
+    setNumber("");
+    setResult("");
+    setErrorMsg("");
+  };
+
+  const handleCopy = async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result);
+      // You could add a toast notification here
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
+  const handleTypeChange = (value: string) => {
+    setType(value as "normal" | "rmb");
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <Card className="mx-auto w-full max-w-3xl">
+        <CardHeader>
+          <CardTitle className="text-2xl font-semibold">数字转中文</CardTitle>
+          <CardDescription>将数字转换为中文大写形式，支持普通数字和人民币金额</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <RadioGroup 
+            defaultValue="normal" 
+            onValueChange={handleTypeChange}
+            className="flex space-x-6"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="normal" id="normal" />
+              <Label htmlFor="normal">普通数字</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="rmb" id="rmb" />
+              <Label htmlFor="rmb">人民币金额</Label>
+            </div>
+          </RadioGroup>
+          
+          <div className="text-sm text-muted-foreground">
+            {type === "normal" ? (
+              <p>将阿拉伯数字转换为中文数字，例如：123 → 一百二十三</p>
+            ) : (
+              <p>将数字转换为人民币大写金额，例如：123.45 → 壹佰贰拾叁元肆角伍分</p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="number" className="mb-2 block">输入数字</Label>
+            <Input
+              id="number"
+              type="text"
+              placeholder="请输入数字..."
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
+            />
+            {errorMsg && <p className="mt-2 text-sm text-red-500">{errorMsg}</p>}
+          </div>
+
+          <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+            <Button onClick={convertToChinese}>
+              转换
+            </Button>
+            <Button onClick={handleClear} variant="outline">
+              清空
+            </Button>
+          </div>
+
+          {result && (
+            <div className="mt-6">
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="text-lg font-medium">转换结果</h3>
+                <Button variant="ghost" size="sm" onClick={handleCopy}>
+                  <ClipboardCopy className="mr-2 h-4 w-4" />
+                  复制
+                </Button>
+              </div>
+              <div className="rounded-md border bg-secondary/20 p-4 font-mono break-all">
+                {result}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+} 
