@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ClipboardCopy } from "lucide-react";
+import { ClipboardCopy, Text } from "lucide-react";
+import ToolLayout from "@/components/tools/ToolLayout";
 
 export default function TextAutospacePage() {
   const [inputText, setInputText] = useState<string>("");
@@ -51,45 +51,61 @@ export default function TextAutospacePage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <Card className="mx-auto w-full max-w-3xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold">中英文自动加空格</CardTitle>
-          <CardDescription>自动为中英文之间添加合适的空格，提高文本的可读性</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <Textarea
-              placeholder="请输入需要处理的文本..."
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              className="min-h-[200px]"
-            />
-          </div>
+    <ToolLayout
+      title="中英文自动加空格"
+      description="自动为中英文之间添加合适的空格，提高文本的可读性"
+      icon={<Text className="h-6 w-6 text-blue-500" />}
+      category={{
+        name: "文本工具",
+        href: "/#text-tools",
+        color: "bg-blue-50 dark:bg-blue-950/30"
+      }}
+    >
+      <div className="p-6 space-y-6">
+        <div>
+          <label htmlFor="input-text" className="mb-2 block font-medium text-sm">
+            输入文本
+          </label>
+          <Textarea
+            id="input-text"
+            placeholder="请输入需要处理的文本..."
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            className="min-h-[200px] resize-y"
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            例如：在中文和English之间添加空格，使文本更易读。
+          </p>
+        </div>
 
-          <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button onClick={handleProcess} disabled={!inputText.trim()}>
-              自动添加空格
-            </Button>
-            <Button onClick={handleClear} variant="outline">
-              清空
-            </Button>
-          </div>
+        <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+          <Button 
+            onClick={handleProcess} 
+            disabled={!inputText.trim()}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            自动添加空格
+          </Button>
+          <Button onClick={handleClear} variant="outline">
+            清空
+          </Button>
+        </div>
 
-          {outputText && (
-            <div className="mt-6">
-              <div className="mb-2 flex items-center justify-between">
-                <h3 className="text-lg font-medium">处理结果</h3>
-                <Button variant="ghost" size="sm" onClick={handleCopy}>
-                  <ClipboardCopy className="mr-2 h-4 w-4" />
-                  复制
-                </Button>
-              </div>
-              <div className="bg-secondary/20 rounded-md border p-4 font-mono">{outputText}</div>
+        {outputText && (
+          <div className="mt-6 border rounded-lg p-4 bg-muted/30">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-base font-medium">处理结果</h3>
+              <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
+                <ClipboardCopy className="mr-2 h-4 w-4" />
+                复制
+              </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            <div className="bg-card rounded-md border p-4 font-mono text-sm whitespace-pre-wrap break-all">
+              {outputText}
+            </div>
+          </div>
+        )}
+      </div>
+    </ToolLayout>
   );
 }

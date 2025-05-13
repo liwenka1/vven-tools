@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { FileCode, ClipboardCopy } from "lucide-react";
+import ToolLayout from "@/components/tools/ToolLayout";
+import { Label } from "@/components/ui/label";
 
 import TurndownService from "turndown";
 
@@ -43,6 +45,7 @@ const convertHtmlToMarkdown = (htmlString: string): string => {
 export default function HtmlToMarkdownPage() {
   const [htmlInput, setHtmlInput] = useState<string>("");
   const [markdownOutput, setMarkdownOutput] = useState<string>("");
+  const [copied, setCopied] = useState<boolean>(false);
 
   const handleConvert = () => {
     if (!htmlInput.trim()) {
@@ -58,46 +61,89 @@ export default function HtmlToMarkdownPage() {
     setMarkdownOutput("");
   };
 
+  const handleCopy = async () => {
+    if (!markdownOutput) return;
+    try {
+      await navigator.clipboard.writeText(markdownOutput);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
-      <Card className="mx-auto w-full max-w-4xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold">HTML 转 MarkDown</CardTitle>
-          <CardDescription>将您的 HTML 代码快速转换为 MarkDown 格式。</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <h3 className="mb-2 text-lg font-medium">输入 HTML</h3>
-              <Textarea
-                placeholder="在此处粘贴您的 HTML..."
-                value={htmlInput}
-                onChange={(e) => setHtmlInput(e.target.value)}
-                className="min-h-[200px] rounded-md border p-2 focus:ring-2 focus:ring-blue-500 md:min-h-[300px] dark:bg-gray-700 dark:text-white"
-                aria-label="HTML Input"
-              />
+    <ToolLayout
+      title="HTML 转 MarkDown"
+      description="将 HTML 代码快速转换为 MarkDown 格式"
+      icon={<FileCode className="h-6 w-6 text-blue-500" />}
+      category={{
+        name: "文本工具",
+        href: "/#text-tools",
+        color: "bg-blue-50 dark:bg-blue-950/30"
+      }}
+    >
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="html-input" className="font-medium">输入 HTML</Label>
+            <Textarea
+              id="html-input"
+              placeholder="在此处粘贴您的 HTML..."
+              value={htmlInput}
+              onChange={(e) => setHtmlInput(e.target.value)}
+              className="min-h-[300px] resize-y font-mono text-sm"
+              aria-label="HTML Input"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="markdown-output" className="font-medium">输出 MarkDown</Label>
+              {markdownOutput && (
+                <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
+                  <ClipboardCopy className="mr-2 h-4 w-4" />
+                  复制
+                </Button>
+              )}
             </div>
-            <div>
-              <h3 className="mb-2 text-lg font-medium">输出 MarkDown</h3>
-              <Textarea
-                placeholder="转换后的 MarkDown 将显示在此处..."
-                value={markdownOutput}
-                readOnly
-                className="min-h-[200px] rounded-md border bg-gray-50 p-2 md:min-h-[300px] dark:bg-gray-800 dark:text-white"
-                aria-label="Markdown Output"
-              />
+            <Textarea
+              id="markdown-output"
+              placeholder="转换后的 MarkDown 将显示在此处..."
+              value={markdownOutput}
+              readOnly
+              className="min-h-[300px] resize-y bg-muted/30 font-mono text-sm"
+              aria-label="Markdown Output"
+            />
+          </div>
+        </div>
+        
+        <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+          <Button 
+            onClick={handleConvert}
+            className="bg-blue-600 hover:bg-blue-700"
+            disabled={!htmlInput.trim()}
+          >
+            转换
+          </Button>
+          <Button 
+            onClick={handleClear} 
+            variant="outline"
+            disabled={!htmlInput && !markdownOutput}
+          >
+            清空
+          </Button>
+        </div>
+
+        {copied && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <div className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 shadow-lg px-3 py-2 rounded-full text-sm flex items-center">
+              <ClipboardCopy className="mr-2 h-4 w-4" />
+              已复制到剪贴板
             </div>
           </div>
-          <div className="mt-6 flex flex-col justify-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button onClick={handleConvert} className="w-full sm:w-auto">
-              转换
-            </Button>
-            <Button onClick={handleClear} variant="outline" className="w-full sm:w-auto">
-              清空
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        )}
+      </div>
+    </ToolLayout>
   );
 }

@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ClipboardCopy } from "lucide-react";
+import { ClipboardCopy, Hash } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import ToolLayout from "@/components/tools/ToolLayout";
 
 export default function NumberToChinesePage() {
   const [number, setNumber] = useState<string>("");
@@ -188,73 +188,96 @@ export default function NumberToChinesePage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <Card className="mx-auto w-full max-w-3xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold">数字转中文</CardTitle>
-          <CardDescription>将数字转换为中文大写形式，支持普通数字和人民币金额</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+    <ToolLayout
+      title="数字转中文"
+      description="将数字转换为中文大写形式，支持普通数字和人民币金额"
+      icon={<Hash className="h-6 w-6 text-blue-500" />}
+      category={{
+        name: "文本工具",
+        href: "/#text-tools",
+        color: "bg-blue-50 dark:bg-blue-950/30"
+      }}
+    >
+      <div className="p-6 space-y-6">
+        <div className="mb-6">
+          <h3 className="text-base font-medium mb-3">转换类型</h3>
           <RadioGroup 
             defaultValue="normal" 
             onValueChange={handleTypeChange}
-            className="flex space-x-6"
+            className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-6"
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="normal" id="normal" />
-              <Label htmlFor="normal">普通数字</Label>
+              <Label 
+                htmlFor="normal" 
+                className="cursor-pointer font-normal"
+              >
+                普通数字
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="rmb" id="rmb" />
-              <Label htmlFor="rmb">人民币金额</Label>
+              <Label 
+                htmlFor="rmb" 
+                className="cursor-pointer font-normal"
+              >
+                人民币金额
+              </Label>
             </div>
           </RadioGroup>
           
-          <div className="text-sm text-muted-foreground">
+          <div className="mt-2 text-xs text-muted-foreground rounded-lg bg-muted p-3">
             {type === "normal" ? (
               <p>将阿拉伯数字转换为中文数字，例如：123 → 一百二十三</p>
             ) : (
               <p>将数字转换为人民币大写金额，例如：123.45 → 壹佰贰拾叁元肆角伍分</p>
             )}
           </div>
+        </div>
 
-          <div>
-            <Label htmlFor="number" className="mb-2 block">输入数字</Label>
-            <Input
-              id="number"
-              type="text"
-              placeholder="请输入数字..."
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-            />
-            {errorMsg && <p className="mt-2 text-sm text-red-500">{errorMsg}</p>}
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="number" className="font-medium">输入数字</Label>
+          <Input
+            id="number"
+            type="text"
+            placeholder="请输入数字..."
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
+            className="font-mono"
+          />
+          {errorMsg && <p className="mt-1 text-sm text-red-500">{errorMsg}</p>}
+          <p className="mt-1 text-xs text-muted-foreground">
+            支持整数和小数，最大支持15位数字
+          </p>
+        </div>
 
-          <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button onClick={convertToChinese}>
-              转换
-            </Button>
-            <Button onClick={handleClear} variant="outline">
-              清空
-            </Button>
-          </div>
+        <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+          <Button 
+            onClick={convertToChinese}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            转换
+          </Button>
+          <Button onClick={handleClear} variant="outline">
+            清空
+          </Button>
+        </div>
 
-          {result && (
-            <div className="mt-6">
-              <div className="mb-2 flex items-center justify-between">
-                <h3 className="text-lg font-medium">转换结果</h3>
-                <Button variant="ghost" size="sm" onClick={handleCopy}>
-                  <ClipboardCopy className="mr-2 h-4 w-4" />
-                  复制
-                </Button>
-              </div>
-              <div className="rounded-md border bg-secondary/20 p-4 font-mono break-all">
-                {result}
-              </div>
+        {result && (
+          <div className="mt-6 border rounded-lg p-4 bg-muted/30">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-base font-medium">转换结果</h3>
+              <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
+                <ClipboardCopy className="mr-2 h-4 w-4" />
+                复制
+              </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            <div className="bg-card rounded-md border p-4 text-sm break-all">
+              {result}
+            </div>
+          </div>
+        )}
+      </div>
+    </ToolLayout>
   );
 } 

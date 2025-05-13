@@ -4,13 +4,16 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { FileOutput, FileUp } from "lucide-react";
+import ToolLayout from "@/components/tools/ToolLayout";
 import JsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { Badge } from "@/components/ui/badge";
 
 export default function HtmlToPdfPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState<boolean>(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: 'info' | 'success' | 'error', message: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,9 +21,9 @@ export default function HtmlToPdfPage() {
       const file = event.target.files[0];
       if (file.type === "text/html") {
         setSelectedFile(file);
-        // toast.success(`已选择文件: ${file.name}`);
+        setStatusMessage({ type: 'success', message: `已选择文件: ${file.name}` });
       } else {
-        // toast.error('请选择一个 HTML 文件 (.html)');
+        setStatusMessage({ type: 'error', message: '请选择一个 HTML 文件 (.html)' });
         setSelectedFile(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = ""; // 重置文件输入
@@ -31,23 +34,19 @@ export default function HtmlToPdfPage() {
 
   const handleConvert = async () => {
     if (!selectedFile) {
-      // toast.error('请先选择一个 HTML 文件。');
+      setStatusMessage({ type: 'error', message: '请先选择一个 HTML 文件' });
       return;
     }
 
     setIsConverting(true);
-    // toast.info('正在转换 HTML 为 PDF...');
+    setStatusMessage({ type: 'info', message: '正在转换 HTML 为 PDF...' });
 
     try {
-      // 动态导入库，因为它们可能只在客户端使用
-      // const { default: jsPDF } = await import('jspdf');
-      // const { default: html2canvas } = await import('html2canvas');
-
       const reader = new FileReader();
       reader.onload = async (e) => {
         const htmlContent = e.target?.result as string;
         if (!htmlContent) {
-          // toast.error('无法读取文件内容。');
+          setStatusMessage({ type: 'error', message: '无法读取文件内容' });
           setIsConverting(false);
           return;
         }
@@ -106,7 +105,6 @@ export default function HtmlToPdfPage() {
                     styleTag.innerHTML = styleTag.innerHTML.replace(oklchRegex, "transparent");
                   }
                 });
-                console.log("iframe.contentDocument.body.outerHTML before html2canvas:", iframeDoc.body.outerHTML);
                 resolve();
               } catch (e) {
                 reject(e);
@@ -141,23 +139,23 @@ export default function HtmlToPdfPage() {
 
           const fileName = selectedFile.name.replace(/\.html$/i, ".pdf");
           pdf.save(fileName);
-          // toast.success('PDF 文件已成功生成并下载！');
+          setStatusMessage({ type: 'success', message: 'PDF 文件已成功生成并下载！' });
         } catch (canvasError) {
           console.error("html2canvas error:", canvasError);
-          // toast.error('将 HTML 转换为图像时出错。请检查控制台获取更多信息。');
+          setStatusMessage({ type: 'error', message: '将 HTML 转换为图像时出错。请检查控制台获取更多信息。' });
         } finally {
           document.body.removeChild(iframe); // 清理临时 iframe
         }
       };
 
       reader.onerror = () => {
-        // toast.error('读取文件时出错。');
+        setStatusMessage({ type: 'error', message: '读取文件时出错。' });
       };
 
       reader.readAsText(selectedFile);
     } catch (error) {
       console.error("PDF conversion error:", error);
-      // toast.error('转换过程中发生错误。请确保已安装 jspdf 和 html2canvas。');
+      setStatusMessage({ type: 'error', message: '转换过程中发生错误。请确保已安装 jspdf 和 html2canvas。' });
     } finally {
       setIsConverting(false);
     }
@@ -168,44 +166,80 @@ export default function HtmlToPdfPage() {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    // toast.info('已清空选择。');
+    setStatusMessage({ type: 'info', message: '已清空选择。' });
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <Card className="mx-auto w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold">HTML 转 PDF</CardTitle>
-          <CardDescription>选择一个本地 HTML 文件并将其转换为 PDF 文档。</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+    <ToolLayout
+      title="HTML 转 PDF"
+      description="选择本地 HTML 文件并将其转换为 PDF 文档"
+      icon={<FileOutput className="h-6 w-6 text-amber-500" />}
+      category={{
+        name: "文件工具",
+        href: "/#file-tools",
+        color: "bg-amber-50 dark:bg-amber-950/30"
+      }}
+    >
+      <div className="p-6 space-y-6">
+        <div className="space-y-4">
           <div>
-            <Label htmlFor="htmlFile" className="mb-2 block text-lg font-medium">
-              选择 HTML 文件
-            </Label>
-            <Input
-              id="htmlFile"
-              type="file"
-              accept=".html, .htm"
-              onChange={handleFileChange}
-              ref={fileInputRef}
-              className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"
-            />
+            <Label htmlFor="htmlFile" className="font-medium">选择 HTML 文件</Label>
+            <div className="mt-2 border border-dashed border-amber-300 dark:border-amber-700 rounded-lg p-6 bg-amber-50/50 dark:bg-amber-950/20 flex flex-col items-center justify-center">
+              <FileUp className="h-10 w-10 text-amber-400 mb-3" />
+              <p className="text-sm text-center text-muted-foreground mb-4">
+                拖放 HTML 文件到此处，或点击下方按钮上传
+              </p>
+              <Input
+                id="htmlFile"
+                type="file"
+                accept=".html, .htm"
+                onChange={handleFileChange}
+                ref={fileInputRef}
+                className="w-full max-w-xs cursor-pointer text-sm"
+              />
+            </div>
             {selectedFile && (
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">已选择: {selectedFile.name}</p>
+              <div className="mt-3 flex items-center gap-2">
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-400">
+                  已选择文件
+                </Badge>
+                <span className="text-sm">{selectedFile.name}</span>
+              </div>
             )}
           </div>
 
-          <div className="flex flex-col justify-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button onClick={handleConvert} disabled={!selectedFile || isConverting} className="w-full sm:w-auto">
+          {statusMessage && (
+            <div 
+              className={`p-3 rounded-md text-sm ${
+                statusMessage.type === 'error' 
+                  ? 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400' 
+                  : statusMessage.type === 'success'
+                  ? 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400'
+                  : 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+              }`}
+            >
+              {statusMessage.message}
+            </div>
+          )}
+
+          <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+            <Button 
+              onClick={handleConvert} 
+              disabled={!selectedFile || isConverting}
+              className="bg-amber-600 hover:bg-amber-700"
+            >
               {isConverting ? "转换中..." : "转换为 PDF"}
             </Button>
-            <Button onClick={handleClear} variant="outline" className="w-full sm:w-auto" disabled={isConverting}>
+            <Button 
+              onClick={handleClear} 
+              variant="outline" 
+              disabled={isConverting || !selectedFile}
+            >
               清空选择
             </Button>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </div>
+    </ToolLayout>
   );
 }

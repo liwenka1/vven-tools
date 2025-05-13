@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Clock, ClipboardCopy } from "lucide-react";
+import ToolLayout from "@/components/tools/ToolLayout";
+import { Badge } from "@/components/ui/badge";
 // We'll need to install react-datepicker and date-fns
 // npm install react-datepicker date-fns
 // npm install --save-dev @types/react-datepicker
@@ -19,6 +22,7 @@ const TimestampConverterPage = () => {
   const [useManualDate, setUseManualDate] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [result, setResult] = useState<string>("");
+  const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     if (useManualDate) {
@@ -62,92 +66,140 @@ const TimestampConverterPage = () => {
     }
   };
 
-  return (
-    <div className="container mx-auto space-y-6 p-4">
-      <h1 className="text-2xl font-bold">时间戳转换工具</h1>
+  const handleCopy = async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
 
-      <div className="space-y-4 rounded-lg border p-6 shadow-sm">
-        <div className="mb-4 flex items-center space-x-2">
-          <Checkbox
-            id="manualDateMode"
-            checked={useManualDate}
-            onCheckedChange={(checked) => setUseManualDate(Boolean(checked))}
-          />
-          <Label htmlFor="manualDateMode" className="text-sm font-medium">
-            手动选择日期/时间 (优先)
-          </Label>
+  return (
+    <ToolLayout
+      title="时间戳转换"
+      description="在时间戳和人类可读的日期时间格式之间进行转换"
+      icon={<Clock className="h-6 w-6 text-purple-500" />}
+      category={{
+        name: "开发工具",
+        href: "/#dev-tools",
+        color: "bg-purple-50 dark:bg-purple-950/30"
+      }}
+    >
+      <div className="p-6 space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="manualDateMode"
+              checked={useManualDate}
+              onCheckedChange={(checked) => setUseManualDate(Boolean(checked))}
+            />
+            <Label htmlFor="manualDateMode" className="text-sm font-medium">
+              手动选择日期/时间 (优先)
+            </Label>
+          </div>
+
+          <div className="bg-muted/40 p-4 rounded-lg text-xs text-muted-foreground">
+            {useManualDate 
+              ? "选择日期和时间将生成对应的时间戳"
+              : "输入时间戳将转换为人类可读的日期和时间"}
+          </div>
+
+          {useManualDate ? (
+            <div className="space-y-2">
+              <Label htmlFor="date-picker" className="font-medium">选择日期和时间:</Label>
+              <DatePicker
+                id="date-picker"
+                selected={selectedDate}
+                onChange={(date: Date | null) => setSelectedDate(date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="yyyy-MM-dd HH:mm"
+                className="bg-background text-foreground focus:ring-ring focus:border-ring w-full rounded-md border p-2"
+                wrapperClassName="w-full"
+              />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="timestamp" className="font-medium">输入时间戳:</Label>
+              <div className="flex space-x-2">
+                <Input
+                  id="timestamp"
+                  type="number"
+                  value={timestampInput}
+                  onChange={(e) => setTimestampInput(e.target.value)}
+                  placeholder={`在此输入时间戳 (${unit})`}
+                  className="flex-grow"
+                />
+                <Button 
+                  onClick={handleSetCurrentTime}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  当前时间
+                </Button>
+              </div>
+              <RadioGroup
+                defaultValue="ms"
+                value={unit}
+                onValueChange={(value: "s" | "ms") => setUnit(value)}
+                className="mt-2 flex items-center space-x-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="ms" id="ms" />
+                  <Label htmlFor="ms" className="cursor-pointer font-normal">毫秒 (ms)</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="s" id="s" />
+                  <Label htmlFor="s" className="cursor-pointer font-normal">秒 (s)</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          )}
         </div>
 
-        {useManualDate ? (
-          <div className="space-y-2">
-            <Label htmlFor="date-picker">选择日期和时间:</Label>
-            <DatePicker
-              id="date-picker"
-              selected={selectedDate}
-              onChange={(date: Date | null) => setSelectedDate(date)}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="yyyy-MM-dd HH:mm"
-              className="bg-background text-foreground focus:ring-ring focus:border-ring w-full rounded-md border p-2"
-              wrapperClassName="w-full"
-            />
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <Label htmlFor="timestamp">输入时间戳:</Label>
-            <div className="flex space-x-2">
-              <Input
-                id="timestamp"
-                type="number"
-                value={timestampInput}
-                onChange={(e) => setTimestampInput(e.target.value)}
-                placeholder={`在此输入时间戳 (${unit})`}
-                className="flex-grow"
-              />
-              <Button onClick={handleSetCurrentTime}>当前时间</Button>
+        {result && (
+          <div className="mt-6 border rounded-lg p-4 bg-muted/30">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-base font-medium">结果:</h3>
+              <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
+                <ClipboardCopy className="mr-2 h-4 w-4" />
+                复制
+              </Button>
             </div>
-            <RadioGroup
-              defaultValue="ms"
-              value={unit}
-              onValueChange={(value: "s" | "ms") => setUnit(value)}
-              className="mt-2 flex items-center space-x-4"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="ms" id="ms" />
-                <Label htmlFor="ms">毫秒 (ms)</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="s" id="s" />
-                <Label htmlFor="s">秒 (s)</Label>
-              </div>
-            </RadioGroup>
+            <div className="bg-card rounded-md border p-4 font-mono text-sm whitespace-pre-wrap break-all">
+              {result}
+            </div>
           </div>
         )}
-      </div>
 
-      {result && (
-        <div className="bg-muted rounded-lg border p-6 shadow-sm">
-          <h2 className="mb-2 text-lg font-semibold">结果:</h2>
-          <pre className="bg-background rounded-md p-3 text-sm break-all whitespace-pre-wrap">{result}</pre>
+        {copied && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 shadow-lg px-3 py-2">
+              <ClipboardCopy className="mr-2 h-4 w-4" />
+              已复制到剪贴板
+            </Badge>
+          </div>
+        )}
+
+        <div className="bg-muted/40 p-4 rounded-lg text-sm space-y-2">
+          <h3 className="font-medium">使用说明:</h3>
+          <ul className="space-y-1 list-disc list-inside text-xs text-muted-foreground">
+            <li>
+              <span className="font-medium">手动选择日期/时间模式:</span>{" "}
+              勾选此选项后，使用日期选择器选择特定日期和时间，显示对应的时间戳。
+            </li>
+            <li>
+              <span className="font-medium">时间戳输入模式:</span> 直接输入时间戳，并选择单位
+              (秒或毫秒)，转换为人类可读的日期时间格式。
+            </li>
+            <li>点击&ldquo;当前时间&rdquo;按钮可将输入设置为当前系统时间。</li>
+          </ul>
         </div>
-      )}
-
-      <div className="bg-secondary/50 text-secondary-foreground mt-6 rounded-lg border p-4 text-sm">
-        <p className="font-semibold">使用说明:</p>
-        <ul className="mt-2 ml-4 list-inside list-disc space-y-1">
-          <li>
-            <strong>手动选择日期/时间模式:</strong>{" "}
-            勾选此选项后，您可以使用日期选择器来选择一个特定的日期和时间，系统将显示其对应的时间戳 (根据所选单位)。
-          </li>
-          <li>
-            <strong>时间戳输入模式:</strong> 取消勾选手动选择后，您可以直接输入时间戳，并选择单位
-            (秒或毫秒)，系统将把它转换为人类可读的日期和时间格式。
-          </li>
-          <li>点击 当前时间 按钮可以将输入框或日期选择器设置为当前的系统时间。</li>
-        </ul>
       </div>
-    </div>
+    </ToolLayout>
   );
 };
 

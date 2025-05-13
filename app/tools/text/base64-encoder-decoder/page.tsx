@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Binary, ClipboardCopy } from "lucide-react";
+import ToolLayout from "@/components/tools/ToolLayout";
+import { Label } from "@/components/ui/label";
 
 const encodeToBase64 = (text: string): string => {
   if (typeof window === "undefined") {
@@ -37,6 +39,7 @@ export default function Base64EncoderDecoderPage() {
   const [inputText, setInputText] = useState<string>("");
   const [outputText, setOutputText] = useState<string>("");
   const [errorText, setErrorText] = useState<string>("");
+  const [copied, setCopied] = useState<boolean>(false);
 
   const handleEncode = () => {
     if (!inputText.trim()) {
@@ -66,50 +69,100 @@ export default function Base64EncoderDecoderPage() {
     setErrorText("");
   };
 
+  const handleCopy = async () => {
+    if (!outputText) return;
+    try {
+      await navigator.clipboard.writeText(outputText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
-      <Card className="mx-auto w-full max-w-4xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold">Base64 编码/解码</CardTitle>
-          <CardDescription>对文本进行 Base64 编码或解码。</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <h3 className="mb-2 text-lg font-medium">输入文本</h3>
-              <Textarea
-                placeholder="在此处粘贴您的文本..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                className="min-h-[200px] rounded-md border p-2 focus:ring-2 focus:ring-blue-500 md:min-h-[300px] dark:bg-gray-700 dark:text-white"
-                aria-label="Input Text"
-              />
+    <ToolLayout
+      title="Base64 编码/解码"
+      description="对文本进行 Base64 编码或解码，支持各种字符编码"
+      icon={<Binary className="h-6 w-6 text-blue-500" />}
+      category={{
+        name: "文本工具",
+        href: "/#text-tools",
+        color: "bg-blue-50 dark:bg-blue-950/30"
+      }}
+    >
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="input-text" className="font-medium">输入文本</Label>
+            <Textarea
+              id="input-text"
+              placeholder="在此处粘贴您的文本..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className="min-h-[300px] resize-y font-mono text-sm"
+              aria-label="Input Text"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="output-text" className="font-medium">输出结果</Label>
+              {outputText && (
+                <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
+                  <ClipboardCopy className="mr-2 h-4 w-4" />
+                  复制
+                </Button>
+              )}
             </div>
-            <div>
-              <h3 className="mb-2 text-lg font-medium">输出结果</h3>
-              <Textarea
-                placeholder="编码/解码后的结果将显示在此处..."
-                value={outputText}
-                readOnly
-                className="min-h-[200px] rounded-md border bg-gray-50 p-2 md:min-h-[300px] dark:bg-gray-800 dark:text-white"
-                aria-label="Output Result"
-              />
+            <Textarea
+              id="output-text"
+              placeholder="编码/解码后的结果将显示在此处..."
+              value={outputText}
+              readOnly
+              className="min-h-[300px] resize-y bg-muted/30 font-mono text-sm"
+              aria-label="Output Result"
+            />
+          </div>
+        </div>
+        
+        {errorText && (
+          <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400">
+            {errorText}
+          </div>
+        )}
+        
+        <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+          <Button 
+            onClick={handleEncode}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            编码
+          </Button>
+          <Button 
+            onClick={handleDecode}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            解码
+          </Button>
+          <Button 
+            onClick={handleClear} 
+            variant="outline"
+            disabled={!inputText && !outputText}
+          >
+            清空
+          </Button>
+        </div>
+
+        {copied && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <div className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 shadow-lg px-3 py-2 rounded-full text-sm flex items-center">
+              <ClipboardCopy className="mr-2 h-4 w-4" />
+              已复制到剪贴板
             </div>
           </div>
-          {errorText && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{errorText}</p>}
-          <div className="mt-6 flex flex-col justify-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button onClick={handleEncode} className="w-full sm:w-auto">
-              编码
-            </Button>
-            <Button onClick={handleDecode} className="w-full sm:w-auto">
-              解码
-            </Button>
-            <Button onClick={handleClear} variant="outline" className="w-full sm:w-auto">
-              清空
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        )}
+      </div>
+    </ToolLayout>
   );
 }

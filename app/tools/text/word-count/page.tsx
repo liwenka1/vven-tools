@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { AlignJustify } from "lucide-react";
+import ToolLayout from "@/components/tools/ToolLayout";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 
 const WordCountPage = () => {
   const [text, setText] = useState("");
@@ -21,42 +24,69 @@ const WordCountPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-10">
-      <Card className="mx-auto w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle>字数统计</CardTitle>
-          <CardDescription>输入文本以统计字数和字符数。</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid w-full gap-4">
-            <Textarea placeholder="在此处输入文本..." value={text} onChange={handleTextChange} rows={10} />
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardDescription>字数</CardDescription>
-                  <CardTitle className="text-4xl">{wordCount}</CardTitle>
-                </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardDescription>字符数 (无空格)</CardDescription>
-                  <CardTitle className="text-4xl">{charCount}</CardTitle>
-                </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardDescription>字符数 (含空格)</CardDescription>
-                  <CardTitle className="text-4xl">{charCountWithSpaces}</CardTitle>
-                </CardHeader>
-              </Card>
+    <ToolLayout
+      title="字数统计"
+      description="快速统计文本的字数、字符数和行数"
+      icon={<AlignJustify className="h-6 w-6 text-blue-500" />}
+      category={{
+        name: "文本工具",
+        href: "/#text-tools",
+        color: "bg-blue-50 dark:bg-blue-950/30"
+      }}
+    >
+      <div className="p-6 space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="input-text" className="font-medium">输入文本</Label>
+          <Textarea
+            id="input-text"
+            placeholder="在此处输入或粘贴文本..."
+            value={text}
+            onChange={handleTextChange}
+            className="min-h-[200px] resize-y font-mono text-sm"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="bg-card rounded-lg border p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">字数</span>
+              <Badge variant="outline" className="bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+                Words
+              </Badge>
             </div>
-            <Button onClick={() => setText("")} variant="outline" className="w-full sm:w-auto">
-              清空内容
-            </Button>
+            <p className="mt-2 text-3xl font-semibold">{wordCount}</p>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          
+          <div className="bg-card rounded-lg border p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">字符数 (无空格)</span>
+              <Badge variant="outline" className="bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+                Chars
+              </Badge>
+            </div>
+            <p className="mt-2 text-3xl font-semibold">{charCount}</p>
+          </div>
+          
+          <div className="bg-card rounded-lg border p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">字符数 (含空格)</span>
+              <Badge variant="outline" className="bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+                Total
+              </Badge>
+            </div>
+            <p className="mt-2 text-3xl font-semibold">{charCountWithSpaces}</p>
+          </div>
+        </div>
+        
+        <Button 
+          onClick={() => setText("")} 
+          variant="outline" 
+          className="w-full sm:w-auto"
+        >
+          清空内容
+        </Button>
+      </div>
+    </ToolLayout>
   );
 };
 
