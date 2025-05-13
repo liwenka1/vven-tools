@@ -44,9 +44,9 @@ const ChinaColorsPage: React.FC = () => {
         color: "bg-emerald-50 dark:bg-emerald-950/30"
       }}
     >
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-6">
         <div className="mx-auto max-w-md">
-          <label htmlFor="search-colors" className="mb-2 block font-medium text-sm">
+          <label htmlFor="search-colors" className="mb-2 block text-sm font-medium">
             查找传统色
           </label>
           <Input
@@ -60,8 +60,8 @@ const ChinaColorsPage: React.FC = () => {
         </div>
 
         {copiedText && (
-          <div className="fixed bottom-4 right-4 z-50">
-            <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 shadow-lg px-3 py-2">
+          <div className="fixed right-4 bottom-4 z-50">
+            <Badge className="bg-emerald-100 px-3 py-2 text-emerald-800 shadow-lg dark:bg-emerald-900 dark:text-emerald-200">
               <ClipboardCopy className="mr-2 h-4 w-4" />
               已复制: {copiedText}
             </Badge>
@@ -69,7 +69,7 @@ const ChinaColorsPage: React.FC = () => {
         )}
 
         <div className="mt-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <h3 className="text-base font-medium">传统色卡 ({filteredColors.length})</h3>
           </div>
 
@@ -91,9 +91,7 @@ const ChinaColorsPage: React.FC = () => {
                     <h3 className="mb-2 truncate text-center text-xl font-semibold" title={color.name}>
                       {color.name}
                     </h3>
-                    <p className="text-center text-muted-foreground text-xs mb-3">
-                      {color.pinyin}
-                    </p>
+                    <p className="text-muted-foreground mb-3 text-center text-xs">{color.pinyin}</p>
                     <div className="space-y-2 text-sm">
                       <Button
                         variant="outline"
@@ -128,7 +126,7 @@ const ChinaColorsPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="py-12 text-center bg-muted/30 rounded-lg border">
+            <div className="bg-muted/30 rounded-lg border py-12 text-center">
               <p className="text-muted-foreground text-xl">未找到匹配的颜色。</p>
             </div>
           )}

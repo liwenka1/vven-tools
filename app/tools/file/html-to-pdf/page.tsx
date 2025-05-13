@@ -13,7 +13,9 @@ import { Badge } from "@/components/ui/badge";
 export default function HtmlToPdfPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState<boolean>(false);
-  const [statusMessage, setStatusMessage] = useState<{ type: 'info' | 'success' | 'error', message: string } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ type: "info" | "success" | "error"; message: string } | null>(
+    null
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,9 +23,9 @@ export default function HtmlToPdfPage() {
       const file = event.target.files[0];
       if (file.type === "text/html") {
         setSelectedFile(file);
-        setStatusMessage({ type: 'success', message: `已选择文件: ${file.name}` });
+        setStatusMessage({ type: "success", message: `已选择文件: ${file.name}` });
       } else {
-        setStatusMessage({ type: 'error', message: '请选择一个 HTML 文件 (.html)' });
+        setStatusMessage({ type: "error", message: "请选择一个 HTML 文件 (.html)" });
         setSelectedFile(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = ""; // 重置文件输入
@@ -34,19 +36,19 @@ export default function HtmlToPdfPage() {
 
   const handleConvert = async () => {
     if (!selectedFile) {
-      setStatusMessage({ type: 'error', message: '请先选择一个 HTML 文件' });
+      setStatusMessage({ type: "error", message: "请先选择一个 HTML 文件" });
       return;
     }
 
     setIsConverting(true);
-    setStatusMessage({ type: 'info', message: '正在转换 HTML 为 PDF...' });
+    setStatusMessage({ type: "info", message: "正在转换 HTML 为 PDF..." });
 
     try {
       const reader = new FileReader();
       reader.onload = async (e) => {
         const htmlContent = e.target?.result as string;
         if (!htmlContent) {
-          setStatusMessage({ type: 'error', message: '无法读取文件内容' });
+          setStatusMessage({ type: "error", message: "无法读取文件内容" });
           setIsConverting(false);
           return;
         }
@@ -139,23 +141,23 @@ export default function HtmlToPdfPage() {
 
           const fileName = selectedFile.name.replace(/\.html$/i, ".pdf");
           pdf.save(fileName);
-          setStatusMessage({ type: 'success', message: 'PDF 文件已成功生成并下载！' });
+          setStatusMessage({ type: "success", message: "PDF 文件已成功生成并下载！" });
         } catch (canvasError) {
           console.error("html2canvas error:", canvasError);
-          setStatusMessage({ type: 'error', message: '将 HTML 转换为图像时出错。请检查控制台获取更多信息。' });
+          setStatusMessage({ type: "error", message: "将 HTML 转换为图像时出错。请检查控制台获取更多信息。" });
         } finally {
           document.body.removeChild(iframe); // 清理临时 iframe
         }
       };
 
       reader.onerror = () => {
-        setStatusMessage({ type: 'error', message: '读取文件时出错。' });
+        setStatusMessage({ type: "error", message: "读取文件时出错。" });
       };
 
       reader.readAsText(selectedFile);
     } catch (error) {
       console.error("PDF conversion error:", error);
-      setStatusMessage({ type: 'error', message: '转换过程中发生错误。请确保已安装 jspdf 和 html2canvas。' });
+      setStatusMessage({ type: "error", message: "转换过程中发生错误。请确保已安装 jspdf 和 html2canvas。" });
     } finally {
       setIsConverting(false);
     }
@@ -166,7 +168,7 @@ export default function HtmlToPdfPage() {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    setStatusMessage({ type: 'info', message: '已清空选择。' });
+    setStatusMessage({ type: "info", message: "已清空选择。" });
   };
 
   return (
@@ -180,15 +182,15 @@ export default function HtmlToPdfPage() {
         color: "bg-amber-50 dark:bg-amber-950/30"
       }}
     >
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="htmlFile" className="font-medium">选择 HTML 文件</Label>
-            <div className="mt-2 border border-dashed border-amber-300 dark:border-amber-700 rounded-lg p-6 bg-amber-50/50 dark:bg-amber-950/20 flex flex-col items-center justify-center">
-              <FileUp className="h-10 w-10 text-amber-400 mb-3" />
-              <p className="text-sm text-center text-muted-foreground mb-4">
-                拖放 HTML 文件到此处，或点击下方按钮上传
-              </p>
+            <Label htmlFor="htmlFile" className="font-medium">
+              选择 HTML 文件
+            </Label>
+            <div className="mt-2 flex flex-col items-center justify-center rounded-lg border border-dashed border-amber-300 bg-amber-50/50 p-6 dark:border-amber-700 dark:bg-amber-950/20">
+              <FileUp className="mb-3 h-10 w-10 text-amber-400" />
+              <p className="text-muted-foreground mb-4 text-center text-sm">拖放 HTML 文件到此处，或点击下方按钮上传</p>
               <Input
                 id="htmlFile"
                 type="file"
@@ -209,13 +211,13 @@ export default function HtmlToPdfPage() {
           </div>
 
           {statusMessage && (
-            <div 
-              className={`p-3 rounded-md text-sm ${
-                statusMessage.type === 'error' 
-                  ? 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400' 
-                  : statusMessage.type === 'success'
-                  ? 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400'
-                  : 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+            <div
+              className={`rounded-md p-3 text-sm ${
+                statusMessage.type === "error"
+                  ? "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                  : statusMessage.type === "success"
+                    ? "bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                    : "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
               }`}
             >
               {statusMessage.message}
@@ -223,18 +225,14 @@ export default function HtmlToPdfPage() {
           )}
 
           <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button 
-              onClick={handleConvert} 
+            <Button
+              onClick={handleConvert}
               disabled={!selectedFile || isConverting}
               className="bg-amber-600 hover:bg-amber-700"
             >
               {isConverting ? "转换中..." : "转换为 PDF"}
             </Button>
-            <Button 
-              onClick={handleClear} 
-              variant="outline" 
-              disabled={isConverting || !selectedFile}
-            >
+            <Button onClick={handleClear} variant="outline" disabled={isConverting || !selectedFile}>
               清空选择
             </Button>
           </div>

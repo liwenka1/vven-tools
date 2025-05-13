@@ -129,9 +129,11 @@ export default function RegexCollectionPage() {
         color: "bg-purple-50 dark:bg-purple-950/30"
       }}
     >
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-6">
         <div className="space-y-2">
-          <Label htmlFor="search-regex" className="font-medium">搜索正则表达式</Label>
+          <Label htmlFor="search-regex" className="font-medium">
+            搜索正则表达式
+          </Label>
           <Input
             id="search-regex"
             type="text"
@@ -141,19 +143,23 @@ export default function RegexCollectionPage() {
             className="w-full"
           />
         </div>
-        
+
         <TooltipProvider>
           <ScrollArea className="h-[600px] w-full rounded-md border">
             {filteredRegexData.length > 0 ? (
               <div className="space-y-4 p-4">
                 {filteredRegexData.map((item, index) => (
-                  <Card key={index} className="shadow-sm overflow-hidden">
-                    <CardHeader className="pb-3 bg-purple-50/50 dark:bg-purple-950/30">
+                  <Card key={index} className="overflow-hidden shadow-sm">
+                    <CardHeader className="bg-purple-50/50 pb-3 dark:bg-purple-950/30">
                       <div className="flex items-start justify-between">
                         <CardTitle className="text-lg font-semibold">{item.name}</CardTitle>
                         <div className="flex gap-2">
                           {item.tags.map((tag) => (
-                            <Badge key={tag} variant="outline" className="bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400">
+                            <Badge
+                              key={tag}
+                              variant="outline"
+                              className="bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400"
+                            >
                               {tag}
                             </Badge>
                           ))}
@@ -164,7 +170,9 @@ export default function RegexCollectionPage() {
                       {item.description && <p className="text-muted-foreground mb-3 text-sm">{item.description}</p>}
 
                       <div className="mb-4">
-                        <Label htmlFor={`test-input-${index}`} className="mb-1 block text-sm font-medium">测试输入</Label>
+                        <Label htmlFor={`test-input-${index}`} className="mb-1 block text-sm font-medium">
+                          测试输入
+                        </Label>
                         <Textarea
                           id={`test-input-${index}`}
                           placeholder="在此输入测试文本..."
@@ -177,16 +185,20 @@ export default function RegexCollectionPage() {
                             {matchResults[index] === "success" ? (
                               <span className="text-xs font-medium text-green-500 dark:text-green-400">✓ 匹配成功</span>
                             ) : matchResults[index] === "fail_text_mismatch" ? (
-                              <span className="text-xs font-medium text-red-500 dark:text-red-400">✗ 匹配失败 (文本不符)</span>
+                              <span className="text-xs font-medium text-red-500 dark:text-red-400">
+                                ✗ 匹配失败 (文本不符)
+                              </span>
                             ) : (
-                              <span className="text-xs font-medium text-yellow-500 dark:text-yellow-400">⚠ 匹配失败 (正则无效)</span>
+                              <span className="text-xs font-medium text-yellow-500 dark:text-yellow-400">
+                                ⚠ 匹配失败 (正则无效)
+                              </span>
                             )}
                           </div>
                         )}
                       </div>
 
                       <div className="relative">
-                        <div className="font-mono text-sm rounded-md border bg-muted/30 p-3 pr-10 overflow-x-auto whitespace-pre-wrap">
+                        <div className="bg-muted/30 overflow-x-auto rounded-md border p-3 pr-10 font-mono text-sm whitespace-pre-wrap">
                           {item.regex}
                         </div>
                         <div className="absolute top-2 right-2">
@@ -196,7 +208,7 @@ export default function RegexCollectionPage() {
                                 onClick={() => copyToClipboard(item.regex, index)}
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 hover:bg-muted"
+                                className="hover:bg-muted h-7 w-7"
                                 aria-label="复制正则表达式"
                               >
                                 <ClipboardCopy className="h-4 w-4" />
@@ -210,9 +222,7 @@ export default function RegexCollectionPage() {
                       </div>
 
                       {copyStatus === index && (
-                        <div className="mt-2 text-xs text-purple-600 dark:text-purple-400">
-                          ✓ 已复制到剪贴板
-                        </div>
+                        <div className="mt-2 text-xs text-purple-600 dark:text-purple-400">✓ 已复制到剪贴板</div>
                       )}
                     </CardContent>
                   </Card>

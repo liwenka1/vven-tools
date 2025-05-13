@@ -88,7 +88,7 @@ const TimestampConverterPage = () => {
         color: "bg-purple-50 dark:bg-purple-950/30"
       }}
     >
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-6">
         <div className="space-y-4">
           <div className="flex items-center space-x-2">
             <Checkbox
@@ -101,15 +101,15 @@ const TimestampConverterPage = () => {
             </Label>
           </div>
 
-          <div className="bg-muted/40 p-4 rounded-lg text-xs text-muted-foreground">
-            {useManualDate 
-              ? "选择日期和时间将生成对应的时间戳"
-              : "输入时间戳将转换为人类可读的日期和时间"}
+          <div className="bg-muted/40 text-muted-foreground rounded-lg p-4 text-xs">
+            {useManualDate ? "选择日期和时间将生成对应的时间戳" : "输入时间戳将转换为人类可读的日期和时间"}
           </div>
 
           {useManualDate ? (
             <div className="space-y-2">
-              <Label htmlFor="date-picker" className="font-medium">选择日期和时间:</Label>
+              <Label htmlFor="date-picker" className="font-medium">
+                选择日期和时间:
+              </Label>
               <DatePicker
                 id="date-picker"
                 selected={selectedDate}
@@ -124,7 +124,9 @@ const TimestampConverterPage = () => {
             </div>
           ) : (
             <div className="space-y-2">
-              <Label htmlFor="timestamp" className="font-medium">输入时间戳:</Label>
+              <Label htmlFor="timestamp" className="font-medium">
+                输入时间戳:
+              </Label>
               <div className="flex space-x-2">
                 <Input
                   id="timestamp"
@@ -134,10 +136,7 @@ const TimestampConverterPage = () => {
                   placeholder={`在此输入时间戳 (${unit})`}
                   className="flex-grow"
                 />
-                <Button 
-                  onClick={handleSetCurrentTime}
-                  className="bg-purple-600 hover:bg-purple-700"
-                >
+                <Button onClick={handleSetCurrentTime} className="bg-purple-600 hover:bg-purple-700">
                   当前时间
                 </Button>
               </div>
@@ -149,11 +148,15 @@ const TimestampConverterPage = () => {
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="ms" id="ms" />
-                  <Label htmlFor="ms" className="cursor-pointer font-normal">毫秒 (ms)</Label>
+                  <Label htmlFor="ms" className="cursor-pointer font-normal">
+                    毫秒 (ms)
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="s" id="s" />
-                  <Label htmlFor="s" className="cursor-pointer font-normal">秒 (s)</Label>
+                  <Label htmlFor="s" className="cursor-pointer font-normal">
+                    秒 (s)
+                  </Label>
                 </div>
               </RadioGroup>
             </div>
@@ -161,7 +164,7 @@ const TimestampConverterPage = () => {
         </div>
 
         {result && (
-          <div className="mt-6 border rounded-lg p-4 bg-muted/30">
+          <div className="bg-muted/30 mt-6 rounded-lg border p-4">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-base font-medium">结果:</h3>
               <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
@@ -169,24 +172,24 @@ const TimestampConverterPage = () => {
                 复制
               </Button>
             </div>
-            <div className="bg-card rounded-md border p-4 font-mono text-sm whitespace-pre-wrap break-all">
+            <div className="bg-card rounded-md border p-4 font-mono text-sm break-all whitespace-pre-wrap">
               {result}
             </div>
           </div>
         )}
 
         {copied && (
-          <div className="fixed bottom-4 right-4 z-50">
-            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 shadow-lg px-3 py-2">
+          <div className="fixed right-4 bottom-4 z-50">
+            <Badge className="bg-purple-100 px-3 py-2 text-purple-800 shadow-lg dark:bg-purple-900 dark:text-purple-200">
               <ClipboardCopy className="mr-2 h-4 w-4" />
               已复制到剪贴板
             </Badge>
           </div>
         )}
 
-        <div className="bg-muted/40 p-4 rounded-lg text-sm space-y-2">
+        <div className="bg-muted/40 space-y-2 rounded-lg p-4 text-sm">
           <h3 className="font-medium">使用说明:</h3>
-          <ul className="space-y-1 list-disc list-inside text-xs text-muted-foreground">
+          <ul className="text-muted-foreground list-inside list-disc space-y-1 text-xs">
             <li>
               <span className="font-medium">手动选择日期/时间模式:</span>{" "}
               勾选此选项后，使用日期选择器选择特定日期和时间，显示对应的时间戳。

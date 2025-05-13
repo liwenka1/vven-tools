@@ -24,19 +24,19 @@ export default function RemoveDuplicatePage() {
     // Split by newlines
     let lines = inputText.split("\n");
     const originalCount = lines.length;
-    
+
     // Preprocess lines if needed
     if (ignoreWhitespace) {
-      lines = lines.map(line => line.trim());
+      lines = lines.map((line) => line.trim());
     }
-    
+
     // Remove duplicates
     let uniqueLines: string[];
     if (ignoreCase) {
       // Case-insensitive deduplication
       const caseMap = new Map<string, string>();
       for (const line of lines) {
-        if (line.trim() !== '') {
+        if (line.trim() !== "") {
           caseMap.set(line.toLowerCase(), line);
         }
       }
@@ -45,10 +45,10 @@ export default function RemoveDuplicatePage() {
       // Case-sensitive deduplication
       uniqueLines = Array.from(new Set(lines));
     }
-    
+
     // Remove empty lines from the final result
-    uniqueLines = uniqueLines.filter(line => line.trim() !== '');
-    
+    uniqueLines = uniqueLines.filter((line) => line.trim() !== "");
+
     // Set the result
     const processedCount = uniqueLines.length;
     setOutputText(uniqueLines.join("\n"));
@@ -82,9 +82,11 @@ export default function RemoveDuplicatePage() {
         color: "bg-blue-50 dark:bg-blue-950/30"
       }}
     >
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-6">
         <div className="space-y-2">
-          <Label htmlFor="inputText" className="font-medium">输入文本</Label>
+          <Label htmlFor="inputText" className="font-medium">
+            输入文本
+          </Label>
           <Textarea
             id="inputText"
             placeholder="请输入需要去重的文本，每行作为一个单位..."
@@ -92,38 +94,30 @@ export default function RemoveDuplicatePage() {
             onChange={(e) => setInputText(e.target.value)}
             className="min-h-[200px] resize-y font-mono text-sm"
           />
-          <p className="mt-1 text-xs text-muted-foreground">
-            每行文本将被视为一个单独的项目，相同的行将被合并。
-          </p>
+          <p className="text-muted-foreground mt-1 text-xs">每行文本将被视为一个单独的项目，相同的行将被合并。</p>
         </div>
-        
-        <div className="bg-muted/40 p-4 rounded-lg space-y-2">
-          <h3 className="text-sm font-medium mb-2">设置选项</h3>
+
+        <div className="bg-muted/40 space-y-2 rounded-lg p-4">
+          <h3 className="mb-2 text-sm font-medium">设置选项</h3>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="ignoreCase" 
+              <Checkbox
+                id="ignoreCase"
                 checked={ignoreCase}
                 onCheckedChange={(checked) => setIgnoreCase(checked as boolean)}
               />
-              <Label 
-                htmlFor="ignoreCase" 
-                className="cursor-pointer font-normal text-sm"
-              >
+              <Label htmlFor="ignoreCase" className="cursor-pointer text-sm font-normal">
                 忽略大小写
               </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="ignoreWhitespace" 
-                checked={ignoreWhitespace} 
+              <Checkbox
+                id="ignoreWhitespace"
+                checked={ignoreWhitespace}
                 onCheckedChange={(checked) => setIgnoreWhitespace(checked as boolean)}
               />
-              <Label 
-                htmlFor="ignoreWhitespace" 
-                className="cursor-pointer font-normal text-sm"
-              >
+              <Label htmlFor="ignoreWhitespace" className="cursor-pointer text-sm font-normal">
                 忽略首尾空格
               </Label>
             </div>
@@ -131,11 +125,7 @@ export default function RemoveDuplicatePage() {
         </div>
 
         <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-          <Button 
-            onClick={handleProcess} 
-            disabled={!inputText.trim()}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
+          <Button onClick={handleProcess} disabled={!inputText.trim()} className="bg-blue-600 hover:bg-blue-700">
             去除重复行
           </Button>
           <Button onClick={handleClear} variant="outline">
@@ -144,7 +134,7 @@ export default function RemoveDuplicatePage() {
         </div>
 
         {outputText && (
-          <div className="mt-6 border rounded-lg p-4 bg-muted/30">
+          <div className="bg-muted/30 mt-6 rounded-lg border p-4">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-base font-medium">处理结果</h3>
               <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
@@ -152,7 +142,7 @@ export default function RemoveDuplicatePage() {
                 复制
               </Button>
             </div>
-            
+
             {stats && (
               <div className="mb-4 flex flex-wrap gap-2">
                 <Badge variant="outline" className="bg-card">
@@ -162,11 +152,12 @@ export default function RemoveDuplicatePage() {
                   去重后行数: {stats.processed}
                 </Badge>
                 <Badge variant="outline" className="bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
-                  减少: {stats.original - stats.processed} 行 ({Math.round((stats.original - stats.processed) / stats.original * 100)}%)
+                  减少: {stats.original - stats.processed} 行 (
+                  {Math.round(((stats.original - stats.processed) / stats.original) * 100)}%)
                 </Badge>
               </div>
             )}
-            
+
             <div className="bg-card rounded-md border">
               <Textarea
                 value={outputText}
@@ -179,4 +170,4 @@ export default function RemoveDuplicatePage() {
       </div>
     </ToolLayout>
   );
-} 
+}

@@ -83,10 +83,10 @@ export default function UrlFormatterPage() {
         color: "bg-purple-50 dark:bg-purple-950/30"
       }}
     >
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="inputUrl" className="mb-2 block font-medium text-sm">
+            <Label htmlFor="inputUrl" className="mb-2 block text-sm font-medium">
               输入 URL
             </Label>
             <Textarea
@@ -99,38 +99,43 @@ export default function UrlFormatterPage() {
             />
           </div>
 
-          <div className="bg-muted/40 p-4 rounded-lg">
-            <h3 className="text-sm font-medium mb-2">格式化选项</h3>
-            <RadioGroup 
-              defaultValue="decode" 
+          <div className="bg-muted/40 rounded-lg p-4">
+            <h3 className="mb-2 text-sm font-medium">格式化选项</h3>
+            <RadioGroup
+              defaultValue="decode"
               value={formatType}
-              onValueChange={setFormatType} 
+              onValueChange={setFormatType}
               className="flex flex-col gap-3 sm:flex-row sm:gap-4"
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="decode" id="decode" />
-                <Label htmlFor="decode" className="cursor-pointer font-normal text-sm">解码 (Decode)</Label>
+                <Label htmlFor="decode" className="cursor-pointer text-sm font-normal">
+                  解码 (Decode)
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="encodeComponent" id="encodeComponent" />
-                <Label htmlFor="encodeComponent" className="cursor-pointer font-normal text-sm">编码组件 (Encode Component)</Label>
+                <Label htmlFor="encodeComponent" className="cursor-pointer text-sm font-normal">
+                  编码组件 (Encode Component)
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="encodeFull" id="encodeFull" />
-                <Label htmlFor="encodeFull" className="cursor-pointer font-normal text-sm">完整编码 (Encode Full URI)</Label>
+                <Label htmlFor="encodeFull" className="cursor-pointer text-sm font-normal">
+                  完整编码 (Encode Full URI)
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="extractParams" id="extractParams" />
-                <Label htmlFor="extractParams" className="cursor-pointer font-normal text-sm">提取参数 (Extract Params)</Label>
+                <Label htmlFor="extractParams" className="cursor-pointer text-sm font-normal">
+                  提取参数 (Extract Params)
+                </Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Button 
-              onClick={handleFormat}
-              className="bg-purple-600 hover:bg-purple-700"
-            >
+            <Button onClick={handleFormat} className="bg-purple-600 hover:bg-purple-700">
               格式化
             </Button>
             <Button onClick={handleClear} variant="outline">
@@ -140,7 +145,7 @@ export default function UrlFormatterPage() {
         </div>
 
         {outputUrl && (
-          <div className="mt-6 border rounded-lg p-4 bg-muted/30">
+          <div className="bg-muted/30 mt-6 rounded-lg border p-4">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-base font-medium">输出结果</h3>
               <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8">
