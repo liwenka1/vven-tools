@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 // Only include tools that are actually implemented
-const categories = [
+export const categories = [
   {
     title: "文本工具",
     description: "处理和转换文本内容。",
