@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Wrench, Github } from "lucide-react";
+import { Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ResumeData } from "@/data/resume";
 
 const Header = () => {
+  const { GitHub } = ResumeData.contact.social;
+  const GitHubIcon = GitHub.icon;
+  
   return (
     <header className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container flex h-16 max-w-screen-2xl items-center">
@@ -28,12 +32,12 @@ const Header = () => {
           <nav className="flex items-center space-x-2">
             <Button asChild variant="ghost" size="icon">
               <a
-                href="https://github.com/your-github-username/vven-tools"
+                href={GitHub.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub"
+                aria-label={GitHub.name}
               >
-                <Github className="h-5 w-5" />
+                <GitHubIcon className="h-5 w-5" />
               </a>
             </Button>
             <ModeToggle />

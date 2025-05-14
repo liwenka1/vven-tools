@@ -1,8 +1,10 @@
-import { Wrench, Github } from "lucide-react";
+import { Wrench } from "lucide-react";
 import Link from "next/link";
+import { ResumeData } from "@/data/resume";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { social } = ResumeData.contact;
 
   return (
     <footer className="bg-background border-t">
@@ -62,15 +64,18 @@ const Footer = () => {
           <p className="text-muted-foreground text-sm">© {currentYear} VVen Tools. 保留所有权利。</p>
 
           <div className="mt-4 flex items-center space-x-4 md:mt-0">
-            <a
-              href="https://github.com/your-github-username/vven-tools"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="GitHub"
-            >
-              <Github className="h-5 w-5" />
-            </a>
+            {Object.values(social).map((item) => (
+              <a
+                key={item.name}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={item.name}
+              >
+                <item.icon className="h-5 w-5" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
