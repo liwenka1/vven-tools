@@ -37,47 +37,47 @@ interface ToolLayoutProps {
 
 export default function ToolLayout({ children, title, description, icon, category }: ToolLayoutProps) {
   const pathname = usePathname();
-  
+
   // Find related tools from the same category
   const relatedTools = useMemo(() => {
     // Find current category
     const currentCategory = categories.find((cat: CategoryProps) => cat.title === category.name);
-    
+
     if (!currentCategory) {
       return [];
     }
-    
+
     // Find current tool index
     const currentToolIndex = currentCategory.tools.findIndex((tool: ToolProps) => tool.href === pathname);
-    
+
     if (currentToolIndex === -1) {
       return currentCategory.tools.slice(0, 3);
     }
-    
+
     // Get 3 related tools (excluding current one)
     const otherTools = [...currentCategory.tools];
     otherTools.splice(currentToolIndex, 1);
-    
+
     // If we have less than 3 tools in this category (after removing current one)
     if (otherTools.length <= 3) {
       return otherTools;
     }
-    
+
     // Create an ordered array of tools, starting from the next tools after current one
     const result: ToolProps[] = [];
     let nextIndex = currentToolIndex;
-    
+
     while (result.length < 3 && result.length < otherTools.length) {
       nextIndex = (nextIndex + 1) % currentCategory.tools.length;
-      
+
       // Skip the current tool
       if (nextIndex === currentToolIndex) {
         continue;
       }
-      
+
       result.push(currentCategory.tools[nextIndex]);
     }
-    
+
     return result;
   }, [pathname, category.name]);
 
@@ -133,9 +133,7 @@ export default function ToolLayout({ children, title, description, icon, categor
                       <span>{tool.name}</span>
                     </CardTitle>
                   </Link>
-                  <CardDescription>
-                    {category.name}类工具
-                  </CardDescription>
+                  <CardDescription>{category.name}类工具</CardDescription>
                 </CardHeader>
               </Card>
             ))}
