@@ -4,6 +4,7 @@ import Footer from "@/components/site/Footer";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -49,7 +50,13 @@ export default function Home() {
           <div className="hidden md:block">
             {/* You can add an illustration here if needed */}
             <div className="from-primary/20 via-muted/20 to-background border-border/50 flex aspect-video items-center justify-center rounded-xl border bg-gradient-to-br">
-              <h3 className="text-primary text-2xl font-semibold">智能工具集</h3>
+              <Image
+                className="h-full w-full rounded-xl object-cover"
+                src="/images/tool.png"
+                alt="tool"
+                width={1440}
+                height={800}
+              />
             </div>
           </div>
         </div>
