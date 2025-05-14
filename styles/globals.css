@@ -120,7 +120,47 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    @apply scroll-smooth;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overscroll-none;
+  }
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+  /* html tag is required here to provide higher specificity */
+  html {
+    @supports (scrollbar-gutter: stable) {
+      body {
+        margin: 0 !important;
+      }
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 5px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  [role="button"],
+  button {
+    @apply cursor-pointer;
   }
 }
