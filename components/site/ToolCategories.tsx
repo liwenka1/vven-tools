@@ -123,6 +123,16 @@ export const categories = [
         name: "HTML 转 PDF",
         href: "/tools/file/html-to-pdf",
         icon: <FileOutput className="mr-2 h-4 w-4 text-amber-500" />
+      },
+      {
+        name: "SVG 优化器",
+        href: "/tools/file/svg-optimizer",
+        icon: <FileCode className="mr-2 h-4 w-4 text-amber-500" />
+      },
+      {
+        name: "文件哈希生成器",
+        href: "/tools/file/hash-generator",
+        icon: <Hash className="mr-2 h-4 w-4 text-amber-500" />
       }
     ]
   }
