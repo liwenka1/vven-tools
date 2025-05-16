@@ -12,7 +12,9 @@ import {
   FileCode,
   FileJson,
   Eraser,
-  Binary
+  Binary,
+  Box,
+  Droplet
 } from "lucide-react";
 
 // Only include tools that are actually implemented
@@ -72,6 +74,21 @@ export const categories = [
         name: "中国传统色",
         href: "/tools/colors/china-colors",
         icon: <Palette className="mr-2 h-4 w-4 text-emerald-500" />
+      },
+      {
+        name: "颜色转换器",
+        href: "/tools/colors/color-converter",
+        icon: <Droplet className="mr-2 h-4 w-4 text-emerald-500" />
+      },
+      {
+        name: "渐变色生成器",
+        href: "/tools/colors/gradient-generator",
+        icon: <Palette className="mr-2 h-4 w-4 text-emerald-500" />
+      },
+      {
+        name: "新拟态生成器",
+        href: "/tools/colors/neumorphism-generator",
+        icon: <Box className="mr-2 h-4 w-4 text-emerald-500" />
       }
     ]
   },
@@ -84,7 +101,7 @@ export const categories = [
     tools: [
       {
         name: "时间戳转换",
-        href: "/tools/date-time/timestamp-converter",
+        href: "/tools/dev/timestamp-converter",
         icon: <Clock className="mr-2 h-4 w-4 text-purple-500" />
       },
       { name: "URL 格式化", href: "/tools/dev/url-formatter", icon: <Code className="mr-2 h-4 w-4 text-purple-500" /> },
