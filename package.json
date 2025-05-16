@@ -22,6 +22,7 @@
     "@types/react-datepicker": "^7.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
@@ -31,11 +32,13 @@
     "react": "^19.0.0",
     "react-datepicker": "^8.3.0",
     "react-dom": "^19.0.0",
+    "svgo": "^3.3.2",
     "tailwind-merge": "^3.2.0",
     "turndown": "^7.2.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
