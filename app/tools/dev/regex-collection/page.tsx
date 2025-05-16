@@ -2,9 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClipboardCopy, Code } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
@@ -130,9 +128,9 @@ export default function RegexCollectionPage() {
       }}
     >
       <div className="space-y-6 p-6">
-        <div className="space-y-2">
-          <Label htmlFor="search-regex" className="font-medium">
-            搜索正则表达式
+        <div className="mx-auto max-w-md">
+          <Label htmlFor="search-regex" className="mb-2 block text-sm font-medium">
+            查找正则表达式
           </Label>
           <Input
             id="search-regex"
@@ -140,101 +138,103 @@ export default function RegexCollectionPage() {
             placeholder="搜索名称、描述、标签或正则表达式..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
+            className="w-full shadow-sm"
           />
         </div>
 
-        <TooltipProvider>
-          <ScrollArea className="h-[600px] w-full rounded-md border">
-            {filteredRegexData.length > 0 ? (
-              <div className="space-y-4 p-4">
-                {filteredRegexData.map((item, index) => (
-                  <Card key={index} className="overflow-hidden shadow-sm">
-                    <CardHeader className="bg-purple-50/50 pb-3 dark:bg-purple-950/30">
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-lg font-semibold">{item.name}</CardTitle>
-                        <div className="flex gap-2">
-                          {item.tags.map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="outline"
-                              className="bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      {item.description && <p className="text-muted-foreground mb-3 text-sm">{item.description}</p>}
+        <div className="mt-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-base font-medium">正则表达式 ({filteredRegexData.length})</h3>
+          </div>
 
-                      <div className="mb-4">
-                        <Label htmlFor={`test-input-${index}`} className="mb-1 block text-sm font-medium">
-                          测试输入
-                        </Label>
-                        <Textarea
-                          id={`test-input-${index}`}
-                          placeholder="在此输入测试文本..."
-                          value={testInputs[index] || ""}
-                          onChange={(e) => handleTestInputChange(index, item.regex, e.target.value)}
-                          className="min-h-[60px] font-mono text-sm"
-                        />
-                        {testInputs[index] && testInputs[index].trim() !== "" && matchResults[index] !== null && (
-                          <div className="mt-1">
-                            {matchResults[index] === "success" ? (
-                              <span className="text-xs font-medium text-green-500 dark:text-green-400">✓ 匹配成功</span>
-                            ) : matchResults[index] === "fail_text_mismatch" ? (
-                              <span className="text-xs font-medium text-red-500 dark:text-red-400">
-                                ✗ 匹配失败 (文本不符)
-                              </span>
-                            ) : (
-                              <span className="text-xs font-medium text-yellow-500 dark:text-yellow-400">
-                                ⚠ 匹配失败 (正则无效)
-                              </span>
-                            )}
-                          </div>
+          {filteredRegexData.length > 0 ? (
+            <div className="space-y-4">
+              {filteredRegexData.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-card overflow-hidden rounded-lg border p-4 shadow-sm transition-all hover:shadow-md"
+                >
+                  <div className="mb-3 flex items-start justify-between">
+                    <h3 className="text-lg font-semibold">{item.name}</h3>
+                    <div className="flex gap-2">
+                      {item.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="outline"
+                          className="bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  {item.description && <p className="text-muted-foreground mb-3 text-sm">{item.description}</p>}
+
+                  <div className="mb-4">
+                    <Label htmlFor={`test-input-${index}`} className="mb-2 block text-sm font-medium">
+                      测试输入
+                    </Label>
+                    <Textarea
+                      id={`test-input-${index}`}
+                      placeholder="在此输入测试文本..."
+                      value={testInputs[index] || ""}
+                      onChange={(e) => handleTestInputChange(index, item.regex, e.target.value)}
+                      className="min-h-[60px] font-mono text-sm"
+                    />
+                    {testInputs[index] && testInputs[index].trim() !== "" && matchResults[index] !== null && (
+                      <div className="mt-2">
+                        {matchResults[index] === "success" ? (
+                          <span className="text-sm font-medium text-green-500 dark:text-green-400">✓ 匹配成功</span>
+                        ) : matchResults[index] === "fail_text_mismatch" ? (
+                          <span className="text-sm font-medium text-red-500 dark:text-red-400">
+                            ✗ 匹配失败 (文本不符)
+                          </span>
+                        ) : (
+                          <span className="text-sm font-medium text-yellow-500 dark:text-yellow-400">
+                            ⚠ 匹配失败 (正则无效)
+                          </span>
                         )}
                       </div>
+                    )}
+                  </div>
 
-                      <div className="relative">
-                        <div className="bg-muted/30 overflow-x-auto rounded-md border p-3 pr-10 font-mono text-sm whitespace-pre-wrap">
-                          {item.regex}
-                        </div>
-                        <div className="absolute top-2 right-2">
-                          <Tooltip delayDuration={300}>
-                            <TooltipTrigger asChild>
-                              <Button
-                                onClick={() => copyToClipboard(item.regex, index)}
-                                variant="ghost"
-                                size="icon"
-                                className="hover:bg-muted h-7 w-7"
-                                aria-label="复制正则表达式"
-                              >
-                                <ClipboardCopy className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>复制到剪贴板</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      </div>
+                  <div className="relative">
+                    <div className="bg-muted/30 overflow-x-auto rounded-md border p-3 pr-10 font-mono text-sm">
+                      {item.regex}
+                    </div>
+                    <div className="absolute top-2 right-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={() => copyToClipboard(item.regex, index)}
+                              variant="ghost"
+                              size="icon"
+                              className="hover:bg-muted h-7 w-7"
+                              aria-label="复制正则表达式"
+                            >
+                              <ClipboardCopy className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>复制到剪贴板</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </div>
 
-                      {copyStatus === index && (
-                        <div className="mt-2 text-xs text-purple-600 dark:text-purple-400">✓ 已复制到剪贴板</div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="flex h-full items-center justify-center p-10">
-                <p className="text-muted-foreground text-center">未找到匹配的正则表达式。</p>
-              </div>
-            )}
-          </ScrollArea>
-        </TooltipProvider>
+                  {copyStatus === index && <div className="mt-2 text-sm text-purple-600">✓ 已复制到剪贴板</div>}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-muted/30 rounded-lg border py-12 text-center">
+              <p className="text-muted-foreground text-xl">未找到匹配的正则表达式。</p>
+            </div>
+          )}
+        </div>
       </div>
     </ToolLayout>
   );
