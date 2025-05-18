@@ -14,7 +14,8 @@ import {
   Eraser,
   Binary,
   Box,
-  Droplet
+  Droplet,
+  Shield
 } from "lucide-react";
 
 // Only include tools that are actually implemented
@@ -109,6 +110,11 @@ export const categories = [
         name: "正则表达式大全",
         href: "/tools/dev/regex-collection",
         icon: <Code className="mr-2 h-4 w-4 text-purple-500" />
+      },
+      {
+        name: "密码强度分析器",
+        href: "/tools/dev/password-strength",
+        icon: <Shield className="mr-2 h-4 w-4 text-purple-500" />
       }
     ]
   },
