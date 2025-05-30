@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ClipboardCopy, Eraser } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 import { Badge } from "@/components/ui/badge";
 
 export default function RemoveDuplicatePage() {

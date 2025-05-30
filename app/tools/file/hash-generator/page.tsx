@@ -6,7 +6,7 @@ import { MD5, SHA1, SHA256, SHA512 } from "crypto-js";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface HashResult {

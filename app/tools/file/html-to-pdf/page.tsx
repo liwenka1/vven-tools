@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileOutput, FileUp } from "lucide-react";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 import JsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { Badge } from "@/components/ui/badge";

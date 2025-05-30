@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ClipboardCopy, Hash } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 
 export default function NumberToChinesePage() {
   const [number, setNumber] = useState<string>("");

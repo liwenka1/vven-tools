@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ClipboardCopy, Code } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 

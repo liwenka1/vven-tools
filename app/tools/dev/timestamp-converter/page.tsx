@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Clock, ClipboardCopy } from "lucide-react";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 import { Badge } from "@/components/ui/badge";
 // We'll need to install react-datepicker and date-fns
 // npm install react-datepicker date-fns

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
-import { categories } from "@/components/site/ToolCategories";
+import { categories } from "@/components/site/tool-categories";
 
 interface ToolProps {
   name: string;

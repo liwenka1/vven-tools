@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FileJson, ClipboardCopy } from "lucide-react";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 import { Label } from "@/components/ui/label";
 
 // A simple XML to JSON converter function (basic implementation)

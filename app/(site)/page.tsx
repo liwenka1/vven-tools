@@ -1,6 +1,6 @@
-import Header from "@/components/site/Header";
-import ToolCategories from "@/components/site/ToolCategories";
-import Footer from "@/components/site/Footer";
+import Header from "@/components/site/header";
+import ToolCategories from "@/components/site/tool-categories";
+import Footer from "@/components/site/footer";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

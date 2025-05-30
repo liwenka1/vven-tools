@@ -5,7 +5,7 @@ import { chinaColorsData } from "./china-colors-data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Palette, ClipboardCopy } from "lucide-react";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/components/tools/tool-layout";
 import { Badge } from "@/components/ui/badge";
 
 const ChinaColorsPage: React.FC = () => {
