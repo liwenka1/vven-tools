@@ -48,34 +48,36 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.5rem; /* 8px - 现代简洁的圆角 */
   
-  /* Blue theme colors - Light mode */
+  /* 简化的色彩系统 - 浅色模式 */
   --background: 0 0% 100%;
-  --foreground: 0 0% 5%;
+  --foreground: 222 84% 4.9%;
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 5%;
+  --card-foreground: 222 84% 4.9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 5%;
-  --primary: 217 91% 60%; /* blue-600 */
+  --popover-foreground: 222 84% 4.9%;
+  
+  /* 主色调 */
+  --primary: 217 91% 60%; /* #1A73E8 */
   --primary-foreground: 0 0% 98%;
-  --secondary: 217 32% 96%; /* blue light */
-  --secondary-foreground: 217 91% 15%;
-  --muted: 217 20% 96%;
-  --muted-foreground: 217 10% 40%;
-  --accent: 238 56% 62%; /* indigo-500 */
+  
+  /* 辅助色 */
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 222 84% 4.9%;
+  
+  /* 中性色 */
+  --muted: 220 14% 96%;
+  --muted-foreground: 215 16% 47%;
+  
+  --accent: 217 91% 60%;
   --accent-foreground: 0 0% 98%;
+  
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --border: 217 20% 88%;
-  --input: 217 20% 88%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
   --ring: 217 91% 60%;
-  
-  /* Blue gradient colors */
-  --primary-from: 59 130 246;
-  --primary-to: 99 102 241;
-  --accent-from: 99 102 241;
-  --accent-to: 139 92 246;
   
   /* Chart colors */
   --chart-1: oklch(0.646 0.222 41.116);
@@ -96,25 +98,30 @@
 }
 
 .dark {
-  /* Blue theme colors - Dark mode */
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 5%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 5%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 217 91% 60%; /* blue-600 */
-  --primary-foreground: 0 0% 5%;
-  --secondary: 240 4% 15%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 4% 15%;
-  --muted-foreground: 240 5% 64%;
-  --accent: 238 56% 62%; /* indigo-500 */
-  --accent-foreground: 0 0% 5%;
+  /* 简化的暗色模式 */
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 213 31% 91%;
+  
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 84% 4.9%;
+  
+  --secondary: 215 27% 17%;
+  --secondary-foreground: 213 31% 91%;
+  
+  --muted: 215 27% 17%;
+  --muted-foreground: 217 10% 64%;
+  
+  --accent: 217 91% 60%;
+  --accent-foreground: 222 84% 4.9%;
+  
   --destructive: 0 63% 31%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 6% 20%;
-  --input: 240 6% 20%;
+  --destructive-foreground: 213 31% 91%;
+  --border: 215 27% 17%;
+  --input: 215 27% 17%;
   --ring: 217 91% 60%;
   
   /* Chart colors */
@@ -138,9 +145,9 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
+    transition-property: background-color, border-color, color, opacity, box-shadow, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
   }
   
   html {
@@ -169,93 +176,50 @@
   }
 }
 
-/* Enhanced button styles for both themes */
+/* 简化的实用类 */
 @layer utilities {
   .btn-primary {
-    @apply bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-none;
-    @apply hover:from-blue-600 hover:to-indigo-700;
-    @apply shadow-lg hover:shadow-xl;
-    @apply transition-all duration-300;
+    @apply bg-primary text-primary-foreground shadow-sm hover:shadow-md;
+    @apply transition-all duration-200 hover:-translate-y-0.5;
   }
   
-  .btn-outline-primary {
-    @apply border-2 border-blue-300 text-blue-700 bg-transparent;
-    @apply hover:bg-blue-50 hover:border-blue-400;
-    @apply dark:border-blue-700 dark:text-blue-300;
-    @apply dark:hover:bg-blue-900/20 dark:hover:border-blue-600;
-    @apply transition-all duration-300;
+  .btn-outline {
+    @apply border border-border text-foreground bg-transparent;
+    @apply hover:bg-accent hover:text-accent-foreground;
+    @apply transition-all duration-200;
   }
   
-  .card-gradient {
-    @apply bg-gradient-to-br from-blue-50 to-indigo-50;
-    @apply dark:from-zinc-900 dark:to-zinc-800;
-    @apply border-2 border-blue-200 dark:border-blue-800;
-    @apply hover:border-blue-400 dark:hover:border-blue-600;
-    @apply hover:shadow-lg hover:shadow-blue-200/20 dark:hover:shadow-blue-900/20;
-    @apply transition-all duration-300;
+  .card-hover {
+    @apply transition-all duration-200 hover:-translate-y-1 hover:shadow-lg;
   }
 }
 
-/* Enhanced scrollbar for both themes */
+/* 简化的滚动条 */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-zinc-800;
-  border-radius: 10px;
+  background: hsl(var(--muted));
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-blue-400 dark:bg-blue-600;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
+  background: hsl(var(--border));
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-blue-500 dark:bg-blue-500;
+  background: hsl(var(--muted-foreground));
 }
 
-/* Fallback scrollbar styles */
+/* 滚动条兼容性 */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: hsl(var(--border)) hsl(var(--muted));
 }
 
-/* Custom scrollbar styles */
-.scrollbar-thin {
-  scrollbar-width: thin;
-}
-
-.scrollbar-thumb-zinc-600 {
-  scrollbar-color: #52525b #27272a;
-}
-
-.scrollbar-track-zinc-800 {
-  scrollbar-color: #52525b #27272a;
-}
-
-/* WebKit scrollbar styles */
-.scrollbar-thin::-webkit-scrollbar {
-  width: 6px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: #27272a;
-  border-radius: 3px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #52525b;
-  border-radius: 3px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #71717a;
-}
-
-/* Custom animations */
+/* 基础动画 */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -265,208 +229,45 @@
   }
 }
 
-@keyframes fadeInUp {
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse-custom {
-  0%, 100% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-}
-
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
   }
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.6s ease-out;
+  animation: fadeIn 0.3s ease-out;
 }
 
-.animate-fadeInUp {
-  animation: fadeInUp 0.6s ease-out;
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
 }
 
-.animate-slideIn {
-  animation: slideIn 0.6s ease-out;
-}
-
-.animate-pulse-custom {
-  animation: pulse-custom 2s infinite;
-}
-
-.animate-bounce-subtle {
-  animation: bounce-subtle 2s infinite;
-}
-
-/* Enhanced gradient text */
-.text-gradient-primary {
-  background: linear-gradient(to right, rgb(37 99 235), rgb(99 102 241));
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-/* Tool category specific styles */
-.tool-category-card {
-  background-color: rgb(255 255 255);
-  border: 2px solid rgb(229 231 235);
-  border-radius: 0.375rem;
-  padding: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.tool-category-card:hover {
-  border-color: rgb(96 165 250);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-
-.dark .tool-category-card {
-  background-color: rgb(39 39 42);
-  border-color: rgb(63 63 70);
-}
-
-.dark .tool-category-card:hover {
-  border-color: rgb(37 99 235);
-}
-
-.tool-category-icon {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease;
-}
-
-.tool-category-card:hover .tool-category-icon {
-  transform: scale(1.1);
-}
-
-.tool-category-title {
-  font-weight: 600;
-  color: rgb(17 24 39);
-  margin-bottom: 0.5rem;
-  transition: color 0.3s ease;
-}
-
-.tool-category-card:hover .tool-category-title {
-  color: rgb(37 99 235);
-}
-
-.dark .tool-category-title {
-  color: rgb(255 255 255);
-}
-
-.dark .tool-category-card:hover .tool-category-title {
-  color: rgb(96 165 250);
-}
-
-/* Enhanced feature cards */
-.feature-card {
-  position: relative;
-  overflow: hidden;
-  border: 2px solid rgb(191 219 254);
-  border-radius: 0.375rem;
-  background: linear-gradient(to bottom right, rgb(239 246 255), rgb(238 242 255));
-  transition: all 0.3s ease;
-}
-
-.feature-card:hover {
-  border-color: rgb(96 165 250);
-  box-shadow: 0 10px 15px -3px rgb(191 219 254 / 0.2), 0 4px 6px -4px rgb(191 219 254 / 0.2);
-}
-
-.dark .feature-card {
-  background: linear-gradient(to bottom right, rgb(24 24 27), rgb(39 39 42));
-  border-color: rgb(30 58 138);
-}
-
-.dark .feature-card:hover {
-  border-color: rgb(37 99 235);
-  box-shadow: 0 10px 15px -3px rgb(30 58 138 / 0.2), 0 4px 6px -4px rgb(30 58 138 / 0.2);
-}
-
-.feature-icon {
-  display: flex;
-  height: 3rem;
-  width: 3rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.75rem;
-  background: linear-gradient(to bottom right, rgb(59 130 246), rgb(99 102 241));
-  color: rgb(255 255 255);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  transition: transform 0.3s ease;
-}
-
-.feature-card:hover .feature-icon {
-  transform: scale(1.1);
-}
-
-/* Responsive design improvements */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
-  
-  .hero-description {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-  
-  .section-title {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-  }
-}
-
-/* Focus styles for accessibility */
+/* 聚焦样式 */
 button:focus-visible,
-a:focus-visible {
-  outline: 2px solid rgb(59 130 246);
-  outline-offset: 2px;
+a:focus-visible,
+[tabindex]:focus-visible {
+  @apply outline-2 outline-offset-2 outline-ring;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
 }
 
-/* Loading states */
+/* 加载状态 */
 .loading {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
