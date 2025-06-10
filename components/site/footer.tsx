@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Wrench, Heart } from "lucide-react";
-import { ResumeData } from "@/data/resume";
+import { ProjectInfo } from "@/data/resume";
 
 const Footer = () => {
 	const currentYear = new Date().getFullYear();
@@ -27,9 +27,9 @@ const Footer = () => {
 		{
 			title: "联系方式",
 			links: [
-				{ name: "GitHub", href: ResumeData.contact.social.GitHub.url },
-				{ name: "反馈建议", href: `${ResumeData.contact.social.GitHub.url}/issues` },
-				{ name: "功能请求", href: `${ResumeData.contact.social.GitHub.url}/discussions` }
+				{ name: "GitHub", href: ProjectInfo.repository.url },
+				{ name: "反馈建议", href: `${ProjectInfo.repository.url}/issues` },
+				{ name: "功能请求", href: `${ProjectInfo.repository.url}/discussions` }
 			]
 		}
 	];
@@ -91,7 +91,7 @@ const Footer = () => {
 						
 						<div className="flex items-center space-x-6">
 							<Link
-								href={ResumeData.contact.social.GitHub.url}
+								href={ProjectInfo.repository.url}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
