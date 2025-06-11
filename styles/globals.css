@@ -49,7 +49,7 @@
 
 :root {
   --radius: 0.5rem; /* 8px - 现代简洁的圆角 */
-  
+
   /* 简化的色彩系统 - 浅色模式 */
   --background: 0 0% 100%;
   --foreground: 222 84% 4.9%;
@@ -57,35 +57,35 @@
   --card-foreground: 222 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222 84% 4.9%;
-  
+
   /* 主色调 */
   --primary: 217 91% 60%; /* #1A73E8 */
   --primary-foreground: 0 0% 98%;
-  
+
   /* 辅助色 */
   --secondary: 220 14% 96%;
   --secondary-foreground: 222 84% 4.9%;
-  
+
   /* 中性色 */
   --muted: 220 14% 96%;
   --muted-foreground: 215 16% 47%;
-  
+
   --accent: 217 91% 60%;
   --accent-foreground: 0 0% 98%;
-  
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
   --border: 220 13% 91%;
   --input: 220 13% 91%;
   --ring: 217 91% 60%;
-  
+
   /* Chart colors */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  
+
   /* Sidebar colors */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.141 0.005 285.823);
@@ -105,32 +105,32 @@
   --card-foreground: 213 31% 91%;
   --popover: 224 71% 4%;
   --popover-foreground: 213 31% 91%;
-  
+
   --primary: 217 91% 60%;
   --primary-foreground: 222 84% 4.9%;
-  
+
   --secondary: 215 27% 17%;
   --secondary-foreground: 213 31% 91%;
-  
+
   --muted: 215 27% 17%;
   --muted-foreground: 217 10% 64%;
-  
+
   --accent: 217 91% 60%;
   --accent-foreground: 222 84% 4.9%;
-  
+
   --destructive: 0 63% 31%;
   --destructive-foreground: 213 31% 91%;
   --border: 215 27% 17%;
   --input: 215 27% 17%;
   --ring: 217 91% 60%;
-  
+
   /* Chart colors */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  
+
   /* Sidebar colors */
   --sidebar: oklch(0.21 0.006 285.885);
   --sidebar-foreground: oklch(0.985 0 0);
@@ -149,16 +149,18 @@
     transition-duration: 0.2s;
     transition-timing-function: ease-out;
   }
-  
+
   html {
     @apply scroll-smooth;
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
   }
-  
+
   body {
     @apply bg-background text-foreground;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   /* html tag is required here to provide higher specificity */
@@ -182,13 +184,13 @@
     @apply bg-primary text-primary-foreground shadow-sm hover:shadow-md;
     @apply transition-all duration-200 hover:-translate-y-0.5;
   }
-  
+
   .btn-outline {
-    @apply border border-border text-foreground bg-transparent;
+    @apply border-border text-foreground border bg-transparent;
     @apply hover:bg-accent hover:text-accent-foreground;
     @apply transition-all duration-200;
   }
-  
+
   .card-hover {
     @apply transition-all duration-200 hover:-translate-y-1 hover:shadow-lg;
   }
@@ -252,13 +254,15 @@
 button:focus-visible,
 a:focus-visible,
 [tabindex]:focus-visible {
-  @apply outline-2 outline-offset-2 outline-ring;
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+  @apply outline-ring outline-2 outline-offset-2;
+  box-shadow:
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--ring));
 }
 
 /* 加载状态 */
 .loading {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
